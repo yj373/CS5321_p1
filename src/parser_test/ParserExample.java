@@ -18,7 +18,23 @@ public class ParserExample {
 				System.out.println("Read statement: " + statement);
 				Select select = (Select) statement;
 				PlainSelect ps = (PlainSelect)select.getSelectBody();
-				System.out.println(ps.getFromItem().toString());
+				if (ps.getDistinct()!=null) {
+					System.out.println(ps.getDistinct().toString());
+				}
+				if (ps.getJoins()!=null) {
+					System.out.println(ps.getJoins().size());
+					System.out.println(ps.getJoins().toString());
+				}
+				if (ps.getFromItem()!=null) {
+					System.out.println(ps.getFromItem().toString());
+				}
+				if(ps.getFromItem().getAlias()!=null) {
+					System.out.println(ps.getFromItem().getAlias());
+				}
+				if (ps.getWhere()!=null) {
+					System.out.println(ps.getWhere().toString());
+				}
+				
 				System.out.println("Select body is " + select.getSelectBody());
 			}
 		} catch (Exception e) {
