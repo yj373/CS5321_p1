@@ -66,6 +66,13 @@ public class DataBase {
 		return Instance;
 	}
 	
+	//Getters
+	public String getAddresses(String str){
+		return addresses.get(str);
+	}
+	public LinkedList<String> getSchema(String str){
+		return schemas.get(str);
+	}
 	
 
 }
