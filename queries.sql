@@ -1,3 +1,4 @@
+SELECT Sailors.A , S.B FROM Sailors;
 SELECT * FROM Sailors;
 SELECT Sailors.A FROM Sailors;
 SELECT S.A FROM Sailors S;

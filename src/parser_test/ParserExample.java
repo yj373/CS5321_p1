@@ -1,10 +1,12 @@
 package parser_test;
 import java.io.FileReader;
+import java.util.List;
 
 import net.sf.jsqlparser.expression.Expression;
 import net.sf.jsqlparser.parser.CCJSqlParser;
 import net.sf.jsqlparser.statement.Statement;
 import net.sf.jsqlparser.statement.select.Select;
+import net.sf.jsqlparser.statement.select.SelectItem;
 import net.sf.jsqlparser.statement.select.PlainSelect;
 
 public class ParserExample {
@@ -20,6 +22,15 @@ public class ParserExample {
 				System.out.println("Read statement: " + statement);
 				Select select = (Select) statement;
 				PlainSelect ps = (PlainSelect)select.getSelectBody();
+				
+				List<SelectItem> test = ps.getSelectItems();
+				for (SelectItem expre : test) {
+					String attributeName = expre.toString();
+					System.out.println(attributeName);
+						
+				}
+				
+				
 				if (ps.getDistinct()!=null) {
 					System.out.println(ps.getDistinct().toString());
 				}
