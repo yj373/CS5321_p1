@@ -6,7 +6,7 @@ import net.sf.jsqlparser.statement.select.PlainSelect;
 import net.sf.jsqlparser.statement.select.SelectItem;
 
 public class ProjectOperator extends Operator{
-	
+	//test
 	/**child operator of current operator*/
 	private Operator childOp = null;
 	/**store information of needed attributes*/
