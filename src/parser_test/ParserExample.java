@@ -1,10 +1,12 @@
 package parser_test;
 import java.io.FileReader;
+import java.util.List;
 
 import net.sf.jsqlparser.expression.Expression;
 import net.sf.jsqlparser.parser.CCJSqlParser;
 import net.sf.jsqlparser.statement.Statement;
 import net.sf.jsqlparser.statement.select.Select;
+import net.sf.jsqlparser.statement.select.SelectItem;
 import net.sf.jsqlparser.statement.select.PlainSelect;
 
 public class ParserExample {
