@@ -1,5 +1,9 @@
 package visitors;
 
+import java.util.ArrayList;
+import java.util.LinkedList;
+
+import data.Tuple;
 import net.sf.jsqlparser.expression.AllComparisonExpression;
 import net.sf.jsqlparser.expression.AnyComparisonExpression;
 import net.sf.jsqlparser.expression.CaseExpression;
@@ -44,10 +48,128 @@ import net.sf.jsqlparser.statement.select.SubSelect;
 //Deal with expression with single table
 public class BasicExpressionVisitor implements ExpressionVisitor{
 	
-	public boolean getResult() {
-		return true;
+	private Tuple currentTuple;
+	private LinkedList<Boolean> result;
+	private LinkedList<Long> data;
+	
+	
+	//Constructors
+	public BasicExpressionVisitor(Tuple tuple) {
+		this.currentTuple = tuple;
+		result = new LinkedList<Boolean>();
+		data = new LinkedList<Long>();
+	}
+	
+	//Getters and setters
+	public Tuple getCurrentTuple() {
+		return currentTuple;
 	}
 
+
+	public void setCurrentTuple(Tuple currentTuple) {
+		this.currentTuple = currentTuple;
+	}
+
+
+	public LinkedList<Boolean> getResult() {
+		return result;
+	}
+
+
+	public void setResult(LinkedList<Boolean> result) {
+		this.result = result;
+	}
+	
+	public LinkedList<Long> getData(){
+		return data;
+	}
+	
+	public void setData (LinkedList<Long> data) {
+		
+	}
+	
+	//Implement AndExpression, Column, LongValue, EqualsTo, NotEqualsTo, GreaterThan
+	//GreaterThanEquals, MinorThan, MinorThanEquals
+	
+	@Override
+	public void visit(AndExpression and) {
+		and.getLeftExpression().accept(this);
+		and.getRightExpression().accept(this);
+		boolean right_res = this.result.get(result.size()-1);
+		boolean left_res = this.result.get(result.size()-2);
+		boolean res = left_res && right_res;
+		this.result.add(res);
+		
+	}
+	
+	@Override
+	public void visit(Column column) {
+		String columnName = column.getWholeColumnName();
+		int data_ind = currentTuple.getSchema().get(columnName);
+		this.data.add(currentTuple.getTupleData()[data_ind]);
+		
+	}
+
+	@Override
+	public void visit(LongValue longV) {
+		this.data.add(longV.getValue());
+		
+	}
+	
+	@Override
+	public void visit(EqualsTo equals) {
+		equals.getLeftExpression().accept(this);
+		equals.getRightExpression().accept(this);
+		Long right_v = this.data.getLast();
+		Long left_v = this.data.get(data.size()-2);
+		this.result.add(left_v == right_v);
+			
+	}
+	
+	@Override
+	public void visit(NotEqualsTo notEquals) {
+		notEquals.getLeftExpression().accept(this);
+		notEquals.getRightExpression().accept(this);
+		Long right_v = this.data.getLast();
+		Long left_v = this.data.get(data.size()-2);
+		this.result.add(left_v == right_v);
+		
+	}
+	
+	@Override
+	public void visit(GreaterThan greater) {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	@Override
+	public void visit(GreaterThanEquals graterEquals) {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	@Override
+	public void visit(MinorThan minor) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void visit(MinorThanEquals minorEquals) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	
+	
+	
+	
+	
+	@Override
+	public void visit(OrExpression arg0) {
+		// TODO Auto-generated method stub
+		
+	}
 	@Override
 	public void visit(NullValue arg0) {
 		// TODO Auto-generated method stub
@@ -74,12 +196,6 @@ public class BasicExpressionVisitor implements ExpressionVisitor{
 
 	@Override
 	public void visit(DoubleValue arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void visit(LongValue arg0) {
 		// TODO Auto-generated method stub
 		
 	}
@@ -139,37 +255,7 @@ public class BasicExpressionVisitor implements ExpressionVisitor{
 	}
 
 	@Override
-	public void visit(AndExpression arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void visit(OrExpression arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
 	public void visit(Between arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void visit(EqualsTo arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void visit(GreaterThan arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void visit(GreaterThanEquals arg0) {
 		// TODO Auto-generated method stub
 		
 	}
@@ -188,30 +274,6 @@ public class BasicExpressionVisitor implements ExpressionVisitor{
 
 	@Override
 	public void visit(LikeExpression arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void visit(MinorThan arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void visit(MinorThanEquals arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void visit(NotEqualsTo arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void visit(Column arg0) {
 		// TODO Auto-generated method stub
 		
 	}
