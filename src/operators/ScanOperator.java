@@ -25,7 +25,7 @@ public class ScanOperator extends Operator{
 		try {
 			String data = read_pointer.readLine();
 			if (data!=null) {
-				Tuple tuple = new Tuple(data);
+				Tuple tuple = new Tuple(data, table_name, attributes);
 				return tuple;
 			}
 		} catch (IOException e) {
