@@ -22,15 +22,6 @@ public class ParserExample {
 				System.out.println("Read statement: " + statement);
 				Select select = (Select) statement;
 				PlainSelect ps = (PlainSelect)select.getSelectBody();
-				
-				List<SelectItem> test = ps.getSelectItems();
-				for (SelectItem expre : test) {
-					String attributeName = expre.toString();
-					System.out.println(attributeName);
-						
-				}
-				
-				
 				if (ps.getDistinct()!=null) {
 					System.out.println(ps.getDistinct().toString());
 				}
