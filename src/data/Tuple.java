@@ -1,5 +1,6 @@
 package data;
 
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 
@@ -17,6 +18,7 @@ public class Tuple {
 		String[] temp = str.split(",");
 		data = new long[temp.length];
 		if (data.length!=attributes.size()) return;
+		schema = new HashMap<String, Integer>();
 		for (int i=0; i<temp.length; i++) {
 			data[i] = Long.parseLong(temp[i]);
 			StringBuilder sb = new StringBuilder();
@@ -34,7 +36,15 @@ public class Tuple {
 	}
 	
 	//Getters
-	public long[] getTupleData() {
+	public String getTupleData() {
+		StringBuilder sb = new StringBuilder();
+		for (int i = 0; i<data.length; i++) {
+			sb.append(String.valueOf(data[i]));
+			sb.append(",");
+		}
+		return sb.toString();
+	}
+	public long[] getData() {
 		return data;
 	}
 	public Map<String, Integer> getSchema() {
@@ -47,6 +57,15 @@ public class Tuple {
 		}else {
 			return data.length;
 		}
+	}
+	public void printData() {
+		StringBuilder sb = new StringBuilder();
+		for (int i = 0; i<data.length; i++) {
+			sb.append(String.valueOf(data[i]));
+			sb.append(",");
+		}
+		System.out.println(sb.toString());
+		
 	}
 	
 

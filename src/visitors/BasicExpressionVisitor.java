@@ -1,6 +1,6 @@
 package visitors;
 
-import java.util.ArrayList;
+
 import java.util.LinkedList;
 
 import data.Tuple;
@@ -91,7 +91,6 @@ public class BasicExpressionVisitor implements ExpressionVisitor{
 	//Implement AndExpression, Column, LongValue, EqualsTo, NotEqualsTo, GreaterThan
 	//GreaterThanEquals, MinorThan, MinorThanEquals
 	
-	@Override
 	public void visit(AndExpression and) {
 		and.getLeftExpression().accept(this);
 		and.getRightExpression().accept(this);
@@ -102,21 +101,18 @@ public class BasicExpressionVisitor implements ExpressionVisitor{
 		
 	}
 	
-	@Override
 	public void visit(Column column) {
 		String columnName = column.getWholeColumnName();
 		int data_ind = currentTuple.getSchema().get(columnName);
-		this.data.add(currentTuple.getTupleData()[data_ind]);
+		this.data.add(currentTuple.getData()[data_ind]);
 		
 	}
 
-	@Override
 	public void visit(LongValue longV) {
 		this.data.add(longV.getValue());
 		
 	}
 	
-	@Override
 	public void visit(EqualsTo equals) {
 		equals.getLeftExpression().accept(this);
 		equals.getRightExpression().accept(this);
@@ -126,219 +122,201 @@ public class BasicExpressionVisitor implements ExpressionVisitor{
 			
 	}
 	
-	@Override
 	public void visit(NotEqualsTo notEquals) {
 		notEquals.getLeftExpression().accept(this);
 		notEquals.getRightExpression().accept(this);
 		Long right_v = this.data.getLast();
 		Long left_v = this.data.get(data.size()-2);
-		this.result.add(left_v == right_v);
+		this.result.add(left_v != right_v);
 		
 	}
 	
-	@Override
 	public void visit(GreaterThan greater) {
-		// TODO Auto-generated method stub
+		greater.getLeftExpression().accept(this);
+		greater.getRightExpression().accept(this);
+		Long right_v = this.data.getLast();
+		Long left_v = this.data.get(data.size()-2);
+		this.result.add(left_v > right_v);
 		
 	}
 	
-	@Override
-	public void visit(GreaterThanEquals graterEquals) {
-		// TODO Auto-generated method stub
+	public void visit(GreaterThanEquals greaterEquals) {
+		greaterEquals.getLeftExpression().accept(this);
+		greaterEquals.getRightExpression().accept(this);
+		Long right_v = this.data.getLast();
+		Long left_v = this.data.get(data.size()-2);
+		this.result.add(left_v >= right_v);
 		
 	}
 	
-	@Override
 	public void visit(MinorThan minor) {
-		// TODO Auto-generated method stub
+		minor.getLeftExpression().accept(this);
+		minor.getRightExpression().accept(this);
+		Long right_v = this.data.getLast();
+		Long left_v = this.data.get(data.size()-2);
+		this.result.add(left_v < right_v);
 		
 	}
 
-	@Override
 	public void visit(MinorThanEquals minorEquals) {
-		// TODO Auto-generated method stub
+		minorEquals.getLeftExpression().accept(this);
+		minorEquals.getRightExpression().accept(this);
+		Long right_v = this.data.getLast();
+		Long left_v = this.data.get(data.size()-2);
+		this.result.add(left_v <= right_v);
 		
 	}
+	
+	
+	
+	
+	
 
-	
-	
-	
-	
-	
-	@Override
-	public void visit(OrExpression arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-	@Override
 	public void visit(NullValue arg0) {
 		// TODO Auto-generated method stub
 		
 	}
 
-	@Override
 	public void visit(Function arg0) {
 		// TODO Auto-generated method stub
 		
 	}
 
-	@Override
 	public void visit(InverseExpression arg0) {
 		// TODO Auto-generated method stub
 		
 	}
 
-	@Override
 	public void visit(JdbcParameter arg0) {
 		// TODO Auto-generated method stub
 		
 	}
 
-	@Override
 	public void visit(DoubleValue arg0) {
 		// TODO Auto-generated method stub
 		
 	}
 
-	@Override
 	public void visit(DateValue arg0) {
 		// TODO Auto-generated method stub
 		
 	}
 
-	@Override
 	public void visit(TimeValue arg0) {
 		// TODO Auto-generated method stub
 		
 	}
 
-	@Override
 	public void visit(TimestampValue arg0) {
 		// TODO Auto-generated method stub
 		
 	}
 
-	@Override
 	public void visit(Parenthesis arg0) {
 		// TODO Auto-generated method stub
 		
 	}
 
-	@Override
 	public void visit(StringValue arg0) {
 		// TODO Auto-generated method stub
 		
 	}
 
-	@Override
 	public void visit(Addition arg0) {
 		// TODO Auto-generated method stub
 		
 	}
 
-	@Override
 	public void visit(Division arg0) {
 		// TODO Auto-generated method stub
 		
 	}
 
-	@Override
 	public void visit(Multiplication arg0) {
 		// TODO Auto-generated method stub
 		
 	}
 
-	@Override
 	public void visit(Subtraction arg0) {
 		// TODO Auto-generated method stub
 		
 	}
 
-	@Override
+	public void visit(OrExpression arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
 	public void visit(Between arg0) {
 		// TODO Auto-generated method stub
 		
 	}
 
-	@Override
 	public void visit(InExpression arg0) {
 		// TODO Auto-generated method stub
 		
 	}
 
-	@Override
 	public void visit(IsNullExpression arg0) {
 		// TODO Auto-generated method stub
 		
 	}
 
-	@Override
 	public void visit(LikeExpression arg0) {
 		// TODO Auto-generated method stub
 		
 	}
 
-	@Override
 	public void visit(SubSelect arg0) {
 		// TODO Auto-generated method stub
 		
 	}
 
-	@Override
 	public void visit(CaseExpression arg0) {
 		// TODO Auto-generated method stub
 		
 	}
 
-	@Override
 	public void visit(WhenClause arg0) {
 		// TODO Auto-generated method stub
 		
 	}
 
-	@Override
 	public void visit(ExistsExpression arg0) {
 		// TODO Auto-generated method stub
 		
 	}
 
-	@Override
 	public void visit(AllComparisonExpression arg0) {
 		// TODO Auto-generated method stub
 		
 	}
 
-	@Override
 	public void visit(AnyComparisonExpression arg0) {
 		// TODO Auto-generated method stub
 		
 	}
 
-	@Override
 	public void visit(Concat arg0) {
 		// TODO Auto-generated method stub
 		
 	}
 
-	@Override
 	public void visit(Matches arg0) {
 		// TODO Auto-generated method stub
 		
 	}
 
-	@Override
 	public void visit(BitwiseAnd arg0) {
 		// TODO Auto-generated method stub
 		
 	}
 
-	@Override
 	public void visit(BitwiseOr arg0) {
 		// TODO Auto-generated method stub
 		
 	}
 
-	@Override
 	public void visit(BitwiseXor arg0) {
 		// TODO Auto-generated method stub
 		
