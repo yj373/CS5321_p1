@@ -46,12 +46,13 @@ public class JoinOperator extends Operator{
 		    	currRightTup = joinRight.getNextTuple();
 		    } else {
 		    	currRightTup = joinRight.getNextTuple();	
-		    }
-	    	
+		    }	    	
 	    }
-
-	    Tuple currTuple = concatenate(currLeftTup, currRightTup);
-		return currTuple;
+   
+	    if ( currLeftTup != null && currRightTup != null) {
+	    	return concatenate(currLeftTup, currRightTup);
+	    }
+		return this.getNextTuple();
 	}
 	
     private Tuple concatenate(Tuple t1, Tuple t2) { 
@@ -66,7 +67,7 @@ public class JoinOperator extends Operator{
     	}
     	
     	// compose the new data
-    	long[] data = Arrays.copyOf(t1.getData(), t2.getSize());
+    	long[] data = Arrays.copyOf(t1.getData(), t1.getSize() + t2.getSize());
     	System.arraycopy(t2.getData(), 0, data, t1.getSize(), t2.getSize());
     	
     	// compose the new schema

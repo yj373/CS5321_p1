@@ -30,7 +30,7 @@ public abstract class Operator {
 			Tuple tuple = getNextTuple();
 			while (tuple != null) {
 				tuple.printData();
-				bw.write(tuple.getTupleData().toString());
+				bw.write(tuple.getTupleData().toString() + '\n');
 				tuple = getNextTuple();
 			}
 			bw.close();			
