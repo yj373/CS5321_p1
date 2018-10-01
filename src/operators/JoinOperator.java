@@ -7,11 +7,15 @@ import data.Tuple;
 public class JoinOperator extends Operator{
 	private Operator joinLeft;
 	private Operator joinRight;
+    private Tuple currLeftTup;
+    private Tuple currRightTup;
     
 	// Constructor
 	public JoinOperator(Operator op1, Operator op2) {
 	    joinLeft = op1;
 	    joinRight = op2;
+	    currLeftTup = null;
+	    currRightTup = null;
 	}
 	
 	@Override
@@ -24,15 +28,26 @@ public class JoinOperator extends Operator{
 			return joinLeft == null ? joinRight.getNextTuple() : joinLeft.getNextTuple();
 		}
 
-		Tuple currLeftTup = joinLeft.getNextTuple();
-		Tuple currRightTup = joinRight.getNextTuple();
+		// If currLeftTup and currRightTup are both null, it is the start of join
+		// If currLeftTup is null but currRightTup is not null, it is the end of join 
 	    if (currLeftTup == null) {
-	    	return null;
-		}
-	    if (currRightTup == null) {
-	    	joinRight.reset();
-	    	currRightTup = joinRight.getNextTuple();
-	    } 
+	    	if (currRightTup == null) {
+		    	currLeftTup = joinLeft.getNextTuple();
+		    	currRightTup = joinRight.getNextTuple();
+	    	} else {
+	    		return null;
+	    	}
+	    } else {
+	    	if (currRightTup == null) {
+		    	joinRight.reset();
+		    	currLeftTup = joinLeft.getNextTuple();
+		    	currRightTup = joinRight.getNextTuple();
+		    } else {
+		    	currRightTup = joinRight.getNextTuple();	
+		    }
+	    	
+	    }
+
 	    Tuple currTuple = concatenate(currLeftTup, currRightTup);
 		return currTuple;
 	}
