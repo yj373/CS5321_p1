@@ -22,6 +22,7 @@ public abstract class Operator {
 	/*Print out all the output tuple
 	 * */
 	public void dump() {
+		reset();
 		String output_path = Dynamic_properties.OUTPUT_PATH;
 		new File (output_path).mkdirs();
 		File file = new File(output_path+"dump.txt");
