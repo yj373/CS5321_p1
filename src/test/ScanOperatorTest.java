@@ -76,5 +76,14 @@ class ScanOperatorTest {
 		assertEquals(sOp.getNextTuple().getTupleData(), "1 200 50 ");		
 	}
 	
+	// Test SQL
+	@Test
+	void testForSQL() {
+		String[] statements = new String[5];	
+		statements[0] = "SELECT Sailors.A, Sailors.B FROM Sailors;";
+		statements[1] = "SELECT Sailors.B, Sailors.A FROM Sailors;";
+		statements[2] = "SELECT * FROM Sailors;";
+	}
+	
 
 }
