@@ -8,11 +8,15 @@ public class JoinOperator extends Operator{
 
 	private Operator joinLeft;
 	private Operator joinRight;
+    private Tuple currLeftTup;
+    private Tuple currRightTup;
     
 	// Constructor
 	public JoinOperator(Operator op1, Operator op2) {
 	    joinLeft = op1;
 	    joinRight = op2;
+	    currLeftTup = null;
+	    currRightTup = null;
 	}
 	
 
@@ -26,17 +30,29 @@ public class JoinOperator extends Operator{
 			return joinLeft == null ? joinRight.getNextTuple() : joinLeft.getNextTuple();
 		}
 
-		Tuple currLeftTup = joinLeft.getNextTuple();
-		Tuple currRightTup = joinRight.getNextTuple();
+		// If currLeftTup and currRightTup are both null, it is the start of join
+		// If currLeftTup is null but currRightTup is not null, it is the end of join 
 	    if (currLeftTup == null) {
-	    	return null;
-		}
-	    if (currRightTup == null) {
-	    	joinRight.reset();
-	    	currRightTup = joinRight.getNextTuple();
-	    } 
-	    Tuple currTuple = concatenate(currLeftTup, currRightTup);
-		return currTuple;
+	    	if (currRightTup == null) {
+		    	currLeftTup = joinLeft.getNextTuple();
+		    	currRightTup = joinRight.getNextTuple();
+	    	} else {
+	    		return null;
+	    	}
+	    } else {
+	    	if (currRightTup == null) {
+		    	joinRight.reset();
+		    	currLeftTup = joinLeft.getNextTuple();
+		    	currRightTup = joinRight.getNextTuple();
+		    } else {
+		    	currRightTup = joinRight.getNextTuple();	
+		    }	    	
+	    }
+   
+	    if ( currLeftTup != null && currRightTup != null) {
+	    	return concatenate(currLeftTup, currRightTup);
+	    }
+		return this.getNextTuple();
 	}
 	
     private Tuple concatenate(Tuple t1, Tuple t2) { 
@@ -51,7 +67,7 @@ public class JoinOperator extends Operator{
     	}
     	
     	// compose the new data
-    	long[] data = Arrays.copyOf(t1.getData(), t2.getSize());
+    	long[] data = Arrays.copyOf(t1.getData(), t1.getSize() + t2.getSize());
     	System.arraycopy(t2.getData(), 0, data, t1.getSize(), t2.getSize());
     	
     	// compose the new schema

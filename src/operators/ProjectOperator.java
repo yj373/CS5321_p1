@@ -1,6 +1,6 @@
 package operators;
 
-import java.util.Deque;
+
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -24,6 +24,7 @@ public class ProjectOperator extends Operator{
 	 * initialize childOp.
 	 * 
 	 */
+
 	public ProjectOperator(PlainSelect plainSelect,Operator op) {
 		child = op;
 		selectItems = plainSelect.getSelectItems();
