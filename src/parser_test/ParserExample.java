@@ -1,7 +1,10 @@
 package parser_test;
 import java.io.FileReader;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import data.Tuple;
 import net.sf.jsqlparser.expression.Expression;
 import net.sf.jsqlparser.parser.CCJSqlParser;
 import net.sf.jsqlparser.statement.Statement;
@@ -22,6 +25,38 @@ public class ParserExample {
 				System.out.println("Read statement: " + statement);
 				Select select = (Select) statement;
 				PlainSelect ps = (PlainSelect)select.getSelectBody();
+				
+				
+				//test project operator
+//				long[] data1 = new long[] {1,2,3};
+//				Map<String, Integer> schema1 = new HashMap<String, Integer>();
+//				schema1.put("Sailors.A",0);
+//				schema1.put("S.C",1);
+//				schema1.put("S.B",2);
+//				Tuple current = new Tuple(data1,schema1);
+//				long[] data = new long[2];
+//				Map<String, Integer> schema = new HashMap<String, Integer>();
+//				
+//				List<SelectItem> selectItems = ps.getSelectItems();
+//				if (selectItems.get(0).toString() == "*") {
+//					System.out.println("current value is *");
+//				} else {
+//					int index = 0;
+//					for (SelectItem expre : selectItems) {
+//						String attributeName = expre.toString();
+//						Integer dataIndex = current.getSchema().get(attributeName);
+//						if (dataIndex!=null) {
+//							data[index] = current.getTupleData()[dataIndex];
+//							schema.put(attributeName, index);
+//							index++;
+//						}	
+//					}
+//					System.out.println(current.getTupleData().toString());
+//				}
+				
+				
+				
+				
 				if (ps.getDistinct()!=null) {
 					System.out.println(ps.getDistinct().toString());
 				}

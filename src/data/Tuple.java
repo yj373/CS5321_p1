@@ -28,6 +28,14 @@ public class Tuple {
 			schema.put(sb.toString(), i);
 		}
 	}
+	
+	// Construct a tuple from previous tuple
+	public Tuple(long[] data, Map<String, Integer> schema) {
+		this.data = data;
+		this.schema = schema;
+	
+	}
+	
 	public Tuple(String[] str_arr) {
 		data = new long[str_arr.length];
 		for (int i=0; i<data.length; i++) {
@@ -47,6 +55,7 @@ public class Tuple {
 	public long[] getData() {
 		return data;
 	}
+	
 	public Map<String, Integer> getSchema() {
 		return schema;
 	}

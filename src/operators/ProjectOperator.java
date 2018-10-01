@@ -1,12 +1,15 @@
 package operators;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
 import data.Tuple;
 import net.sf.jsqlparser.statement.select.PlainSelect;
 import net.sf.jsqlparser.statement.select.SelectItem;
 
 public class ProjectOperator extends Operator{
-	//test
+	
 	/**child operator of current operator*/
 	private Operator childOp = null;
 	/**store information of needed attributes*/
@@ -39,14 +42,24 @@ public class ProjectOperator extends Operator{
 		
 		Tuple current = childOp.getNextTuple();
 		if (current != null && !allColumns) {
-			//build new tuple
-			//根据attribute 到对应的map里面找数据
+			//Assume there must be corresponding columns
+			//in the given tuple
+			long[] data = new long[selectItems.size()];
+			Map<String, Integer> schema = new HashMap<String, Integer>();
+			int index = 0;
+			
 			for (SelectItem expre : selectItems) {
 				String attributeName = expre.toString();
-					
+				Integer dataIndex = current.getSchema().get(attributeName);
+				if (dataIndex!=null) {
+					data[index] = current.getTupleData()[dataIndex];
+					schema.put(attributeName, index);
+					index++;
+				}	
 			}
+			
+			current = new Tuple(data, schema);
 		}
-		
 		return current;
 	}
 
