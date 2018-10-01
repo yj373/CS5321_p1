@@ -13,6 +13,7 @@ import operators.JoinOperator;
 import operators.ProjectOperator;
 import operators.ScanOperator;
 import operators.SelectOperator;
+import operators.SortOperator;
 
 public class Main {
 
@@ -31,11 +32,18 @@ public class Main {
 				System.out.println(list.get(0).toString());
 			}
 			ScanOperator scanOp = new ScanOperator(table_info);
+
+			SelectOperator selectOp = new SelectOperator(ps,scanOp);
+			ProjectOperator projectOp = new ProjectOperator(ps, selectOp);
+			SortOperator sortOp = new SortOperator(ps, projectOp);
+			sortOp.dump();
+
 			ScanOperator scanOp1 = new ScanOperator(table_info1.get(0).toString());
 			JoinOperator joinOp = new JoinOperator(scanOp, scanOp1);
-			//SelectOperator selectOp = new SelectOperator(ps,scanOp);
-			ProjectOperator projectOp = new ProjectOperator(ps, joinOp);
-			projectOp.dump();
+//			SelectOperator selectOp = new SelectOperator(ps,scanOp);
+//			ProjectOperator projectOp = new ProjectOperator(ps, joinOp);
+//			projectOp.dump();
+
 		} catch (Exception e) {
 			System.err.println("Exception occurred during parsing");
 			e.printStackTrace();

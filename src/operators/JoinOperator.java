@@ -94,5 +94,21 @@ public class JoinOperator extends Operator{
 		}
 		
 	}
-
+	
+	// Getters of children
+	public Operator getLeftChild() {
+		return joinLeft;
+	}
+	public Operator getRightChild() {
+		return joinRight;
+	}
+	
+	// Setters of children
+	
+	public void setLeftChild(Operator op) {
+		joinLeft = op;
+	}
+    public void setRightChild(Operator op) {
+    	joinRight = op;
+    }
 }

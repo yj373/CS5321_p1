@@ -18,15 +18,15 @@ public class SortOperator extends Operator{
 	private PlainSelect plainSelect;
 	private String[] sortSequence;
 	private List<Tuple> dataCollection;
-	private int currentIndex;
+	private int currentIndex = 0;
 	
 	
 	public SortOperator(PlainSelect plainSelect, Operator op) {
-		this.child = op;
+		
 		this.plainSelect = plainSelect;
-		
-		
-		List<Tuple> dataCollection = new ArrayList<Tuple>();
+		this.child = op;
+
+		dataCollection = new ArrayList<Tuple>();
 		Tuple current = child.getNextTuple();
 		
 		/**get sorting sequence*/
@@ -37,7 +37,7 @@ public class SortOperator extends Operator{
 		for (String key : schema.keySet()) {
 			pairs.put(schema.get(key), key);
 		}
-		String[] sortSequence = new String[pairs.size()];
+		sortSequence = new String[pairs.size()];
 		for (int i=0; i<pairs.size(); i++) {
 			sortSequence[i] = pairs.get(i);
 		}
@@ -56,7 +56,7 @@ public class SortOperator extends Operator{
 	@Override
 	public Tuple getNextTuple() {
 		Tuple current = null;
-		currentIndex = 0;
+		
 		if (currentIndex < dataCollection.size()) {
 			current = dataCollection.get(currentIndex);
 			currentIndex++;
@@ -67,35 +67,55 @@ public class SortOperator extends Operator{
 	@Override
 	public void reset() {
 		currentIndex = 0;
-		
+	}
+	
+	/**
+	 * getter method to get child
+	 */
+	public Operator getChild() {
+		return child;
+	}
+	
+	
+	/**
+	 * setter method to set child
+	 */
+	public void setChild(Operator op) {
+		child = op;
 	}
 	
 	class TupleComparator implements Comparator<Tuple> {
 		
 		/**get the required sorting sequence */
 		List<OrderByElement> list = plainSelect.getOrderByElements();
+		
 		public int compare(Tuple o1, Tuple o2) {
-			for (int i=0; i<list.size(); i++) {
-				Integer col = o1.getSchema().get(list.get(i).toString());
-				if (o1.getData()[col] < o2.getData()[col]) {
-					return -1;
-				} else if (o1.getData()[col] > o2.getData()[col]){
-					return 1;
-				} 
-				
+			if (list != null) {
+				for (int i=0; i<list.size(); i++) {
+					Integer col = o1.getSchema().get(list.get(i).toString());
+					if (o1.getData()[col] < o2.getData()[col]) {
+						return -1;
+					} 
+					if (o1.getData()[col] > o2.getData()[col]){
+						return 1;
+					} 
+
+				}
 			}
-			
+
 			/**
 			 * break ties in the rest of attributes
 			 * we can directly iterate over every element
 			 * because we have checked all required attributes, which means
 			 * the previous comparing results must be zero
 			 */
+			
 			for (int i=0; i< sortSequence.length; i++) {
-				Integer col = o1.getSchema().get(list.get(i).toString());
+				Integer col = o1.getSchema().get(sortSequence[i]);
 				if (o1.getData()[col] < o2.getData()[col]) {
 					return -1;
-				} else if (o1.getData()[col] > o2.getData()[col]){
+				} 
+				if (o1.getData()[col] > o2.getData()[col]){
 					return 1;
 				} 
 			}

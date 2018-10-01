@@ -1,1 +1,1 @@
-SELECT * FROM Sailors, Boats AS Bt WHERE Sailors.A<5 AND Sailors.B>100;
+SELECT * FROM Sailors Order By Sailors.B;

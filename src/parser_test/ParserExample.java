@@ -26,6 +26,9 @@ public class ParserExample {
 				System.out.println("Read statement: " + statement);
 				Select select = (Select) statement;
 				PlainSelect ps = (PlainSelect)select.getSelectBody();
+//				
+//				Expression test = ps.getWhere();
+//				System.out.println(test.toString());
 				//List<> test = ps.getOrderByElements();
 				
 				
