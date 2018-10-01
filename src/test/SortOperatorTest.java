@@ -1,5 +1,6 @@
 package test;
 
+
 import java.io.StringReader;
 
 import org.junit.jupiter.api.Test;
@@ -11,16 +12,20 @@ import net.sf.jsqlparser.statement.select.Select;
 import operators.ProjectOperator;
 import operators.ScanOperator;
 import operators.SelectOperator;
+import operators.SortOperator;
 
-
-class SelectOperatorTest {
+class SortOperatorTest {
 
 	@Test
 	public void getNextTupleTest() throws JSQLParserException {
 
-		String[] statements = new String[1];
+		String[] statements = new String[4];
 		
-		statements[0] = "SELECT * FROM Sailors S WHERE S.B = 300;";
+		statements[0] = "SELECT * FROM Sailors;";
+		statements[1] = "SELECT * FROM Sailors S ORDER BY S.B;";
+		statements[2] = "SELECT S.B, S.C FROM Sailors S Order By S.B;";
+		statements[3] = "SELECT * FROM Sailors WHERE Sailors.C = 50 ORDER BY Sailors.B;";
+		
 		
 		for (int i=0; i< statements.length; i++) {
 			System.out.println("*******when statement is : " + statements[i]);
@@ -31,12 +36,15 @@ class SelectOperatorTest {
 			String table_info = ps.getFromItem().toString();
 			ScanOperator scanOp = new ScanOperator(table_info);
 			SelectOperator selectOp = new SelectOperator(ps,scanOp);
-			ProjectOperator projectOp = new ProjectOperator(ps, selectOp);
+			SortOperator sortOp = new SortOperator(ps, selectOp);
+			ProjectOperator projectOp = new ProjectOperator(ps, sortOp);
 			projectOp.dump();
 			System.out.println("*******end*********");
 			System.out.println();
 		}
 
 	}
+
+
 
 }
