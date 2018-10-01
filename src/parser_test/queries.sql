@@ -1,3 +1,4 @@
+SELECT * FROM Sailors, Reserves WHERE Sailors.A = Reserves.G AND Sailors.A > Reserves.G;
 SELECT * FROM Sailors S;
 SELECT S.A, S.B FROM Sailors S;
 SELECT Sailors.A, Sailors.B FROM Sailors;
