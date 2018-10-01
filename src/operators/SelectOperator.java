@@ -14,9 +14,8 @@ public class SelectOperator extends Operator{
 	
 	private Operator child;
 	private Expression expression;
-	private LinkedList<String> attributes;
-	private String table_name;
-	private String table_aliase;
+	private String tableName;
+	private String tableAliase;
 
 	@Override
 	public Tuple getNextTuple() {
@@ -43,17 +42,30 @@ public class SelectOperator extends Operator{
 	
 	//Constructors
 	public SelectOperator(PlainSelect ps, Operator op) {
-		String table_info = ps.getFromItem().toString();
-		String[] aim_table = table_info.split("\\s+");
-		if (aim_table.length<1) {
+		String tableInfo = ps.getFromItem().toString();
+		String[] aimTable = tableInfo.split("\\s+");
+		if (aimTable.length<1) {
 			this.child = null;
 			return;
 		}
 		this.child = op;
 		this.expression = ps.getWhere();
-		this.table_name = aim_table[0];
-		this.table_aliase = aim_table[aim_table.length-1];
-		this.attributes = DataBase.getInstance().getSchema(table_name);
+		this.tableName = aimTable[0];
+		this.tableAliase = aimTable[aimTable.length-1];
+	}
+	
+	public SelectOperator(String tableName, String tableAliase, Expression ex, Operator op) {
+		this.child = op;
+		this.expression = ex;
+		this.tableName = tableName;
+		this.tableAliase = tableAliase;
+	}
+	
+	public SelectOperator(String tableAliase, Expression ex, Operator op) {
+		this.child = op;
+		this.expression = ex;
+		this.tableName = tableAliase;
+		this.tableAliase = tableAliase;
 	}
 	
 	
@@ -74,28 +86,20 @@ public class SelectOperator extends Operator{
 		this.expression = expression;
 	}
 
-	public LinkedList<String> getAttributes() {
-		return attributes;
+	public String getTableName() {
+		return tableName;
 	}
 
-	public void setAttributes(LinkedList<String> attributes) {
-		this.attributes = attributes;
-	}
-
-	public String getTable_name() {
-		return table_name;
-	}
-
-	public void setTable_name(String table_name) {
-		this.table_name = table_name;
+	public void setTable_name(String tableName) {
+		this.tableName = tableName;
 	}
 
 	public String getTable_aliase() {
-		return table_aliase;
+		return tableAliase;
 	}
 
-	public void setTable_aliase(String table_aliase) {
-		this.table_aliase = table_aliase;
+	public void setTableAliase(String tableAliase) {
+		this.tableAliase = tableAliase;
 	}
 	
 	

@@ -25,6 +25,11 @@ public class Main {
 			PlainSelect ps = (PlainSelect)select.getSelectBody();
 			String table_info = ps.getFromItem().toString();
 			List table_info1 = ps.getJoins();
+			
+			List list = ps.getJoins();
+			if (list != null){
+				System.out.println(list.get(0).toString());
+			}
 			ScanOperator scanOp = new ScanOperator(table_info);
 			ScanOperator scanOp1 = new ScanOperator(table_info1.get(0).toString());
 			JoinOperator joinOp = new JoinOperator(scanOp, scanOp1);

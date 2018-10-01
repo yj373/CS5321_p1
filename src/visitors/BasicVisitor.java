@@ -1,13 +1,17 @@
 package visitors;
 
 
-import java.util.Stack;
+import java.util.Deque;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.Map;
 
 import net.sf.jsqlparser.expression.AllComparisonExpression;
 import net.sf.jsqlparser.expression.AnyComparisonExpression;
 import net.sf.jsqlparser.expression.CaseExpression;
 import net.sf.jsqlparser.expression.DateValue;
 import net.sf.jsqlparser.expression.DoubleValue;
+import net.sf.jsqlparser.expression.Expression;
 import net.sf.jsqlparser.expression.ExpressionVisitor;
 import net.sf.jsqlparser.expression.Function;
 import net.sf.jsqlparser.expression.InverseExpression;
@@ -56,8 +60,12 @@ import operators.Operator;
 import operators.ScanOperator;
 
 public class BasicVisitor implements SelectVisitor, FromItemVisitor, ItemsListVisitor, ExpressionVisitor{
+	
+	
 	private Operator rootOp = null;
-	private Stack<Operator> operatorStack = null;
+	private Deque<Operator> joinStack = new LinkedList<Operator>() ;
+	private Map<String, Operator[]> tableDirectory = new HashMap<String, Operator[]>();
+	private LinkedList<String> currentTable = new LinkedList<String>();
 	
 	public Operator getQueryPlan(Select select) {
 		select.getSelectBody().accept(this);
@@ -66,12 +74,27 @@ public class BasicVisitor implements SelectVisitor, FromItemVisitor, ItemsListVi
 
 	public void visit(PlainSelect ps) {
 		ps.getFromItem().accept(this);
+		if (ps.getJoins()!=null) {
+			for(Object j: ps.getJoins()) {
+				String tableInfo = j.toString();
+				ScanOperator scanOp = new ScanOperator(tableInfo);
+				ScanOperator[] rootEnd = new ScanOperator[2];
+				rootEnd[0] = scanOp;
+				rootEnd[1] = scanOp;
+				tableDirectory.put(scanOp.getTableAliase(), rootEnd);
+ 
+			}
+		}
+		ps.getWhere().accept(this);
 		
 	}
 	
 	public void visit(Table table) {
-		ScanOperator scanOp= new ScanOperator(table.getWholeTableName(), table.getAlias());
-		
+		ScanOperator scanOp = new ScanOperator(table.getWholeTableName(), table.getAlias());
+		ScanOperator[] rootEnd = new ScanOperator[2];
+		rootEnd[0] = scanOp;
+		rootEnd[1] = scanOp;
+		tableDirectory.put(scanOp.getTableAliase(), rootEnd);		
 		
 	}
 	
@@ -89,13 +112,20 @@ public class BasicVisitor implements SelectVisitor, FromItemVisitor, ItemsListVi
 	
 	@Override
 	public void visit(AndExpression and) {
-		// TODO Auto-generated method stub
+		and.getLeftExpression().accept(this);
+		and.getRightExpression().accept(this);
 		
 	}
 	
 	@Override
 	public void visit(EqualsTo equals) {
-		// TODO Auto-generated method stub
+		Expression left = equals.getLeftExpression();
+		Expression right = equals.getRightExpression();
+		int expressionType = getExpressionType(left, right);
+		if (expressionType == 1) {
+			
+		}
+		
 		
 	}
 
@@ -129,10 +159,11 @@ public class BasicVisitor implements SelectVisitor, FromItemVisitor, ItemsListVi
 		
 	}
 	
-	@Override
-	public void visit(ExpressionList expressionList) {
-		// TODO Auto-generated method stub
-		
+	//Classify the expressions
+	//Type 1: don't need join, Type 2: need join
+	private int getExpressionType(Expression e1, Expression e2) {
+		if (e1 instanceof Column && e2 instanceof Column) return 2;
+		return 1;
 	}
 
 
@@ -147,10 +178,12 @@ public class BasicVisitor implements SelectVisitor, FromItemVisitor, ItemsListVi
 	
 	
 	
+	@Override
+	public void visit(ExpressionList expressionList) {
+		// TODO Auto-generated method stub
+		
+	}
 	
-	
-	
-
 	public void visit(Union arg0) {
 		// TODO Auto-generated method stub
 		

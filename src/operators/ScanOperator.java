@@ -109,19 +109,19 @@ public class ScanOperator extends Operator{
 		return attributes;
 	}
 
-	public String getTable_name() {
+	public String getTableName() {
 		return tableName;
 	}
 
-	public String getTable_address() {
+	public String getTableAddress() {
 		return tableAddress;
 	}
 
-	public File getTable_file() {
+	public File getTableFile() {
 		return tableFile;
 	}
 
-	public RandomAccessFile getRead_pointer() {
+	public RandomAccessFile getReadPointer() {
 		return readPointer;
 	}
 	
