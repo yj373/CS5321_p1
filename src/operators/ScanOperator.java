@@ -12,20 +12,20 @@ import data.Tuple;
 //Deal with Select * From Table
 public class ScanOperator extends Operator{
 	
-	private String table_name;
-	private String table_address;
-	private File table_file;
-	private RandomAccessFile read_pointer;
-	private String table_aliase;
+	private String tableName;
+	private String tableAddress;
+	private File tableFile;
+	private RandomAccessFile readPointer;
+	private String tableAliase;
 	private LinkedList<String> attributes;
 	
 
 	@Override
 	public Tuple getNextTuple() {
 		try {
-			String data = read_pointer.readLine();
+			String data = readPointer.readLine();
 			if (data!=null) {
-				Tuple tuple = new Tuple(data, table_name, attributes);
+				Tuple tuple = new Tuple(data, tableName, attributes);
 				return tuple;
 			}
 		} catch (IOException e) {
@@ -39,7 +39,7 @@ public class ScanOperator extends Operator{
 	@Override
 	public void reset() {
 		try {
-			this.read_pointer.seek(0);
+			this.readPointer.seek(0);
 		} catch (IOException e) {
 			e.printStackTrace();
 			e.getMessage();
@@ -54,44 +54,44 @@ public class ScanOperator extends Operator{
 	public ScanOperator(String table_info) {
 		String[] aim_table = table_info.split("\\s+");
 		if (aim_table.length<1) {
-			this.table_name = null;
+			this.tableName = null;
 			return;
 		}
-		this.table_name = aim_table[0];
-		this.table_address = DataBase.getInstance().getAddresses(table_name);
-		this.table_file = new File(table_address);
+		this.tableName = aim_table[0];
+		this.tableAddress = DataBase.getInstance().getAddresses(tableName);
+		this.tableFile = new File(tableAddress);
 		try {
-			this.read_pointer = new RandomAccessFile(this.table_file, "r");
+			this.readPointer = new RandomAccessFile(this.tableFile, "r");
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 			e.getMessage();
 		}
-		this.table_aliase = aim_table[aim_table.length-1];
-		this.attributes = DataBase.getInstance().getSchema(table_name);
+		this.tableAliase = aim_table[aim_table.length-1];
+		this.attributes = DataBase.getInstance().getSchema(tableName);
 	}
 	
 	//Getters
 	public String getTableAliase() {
-		return table_aliase;
+		return tableAliase;
 	}
 	public LinkedList<String> getAttributes(){
 		return attributes;
 	}
 
 	public String getTable_name() {
-		return table_name;
+		return tableName;
 	}
 
 	public String getTable_address() {
-		return table_address;
+		return tableAddress;
 	}
 
 	public File getTable_file() {
-		return table_file;
+		return tableFile;
 	}
 
 	public RandomAccessFile getRead_pointer() {
-		return read_pointer;
+		return readPointer;
 	}
 
 	
