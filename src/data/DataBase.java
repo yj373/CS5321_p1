@@ -16,9 +16,9 @@ import java.io.IOException;
 
 public class DataBase {
 	//Get the needed paths
-	private String query_path = Constants.QUERY_PATH;
-	private String data_path = Constants.DATA_PATH;
-	private String schema_path = Constants.SCHEMA_PATH;
+	private String query_path = Dynamic_properties.QUERY_PATH;
+	private String data_path = Dynamic_properties.DATA_PATH;
+	private String schema_path = Dynamic_properties.SCHEMA_PATH;
 	
 	//Track the address of each table
 	//key:the name of the table, value: the address of the table
@@ -38,9 +38,9 @@ public class DataBase {
 			String line = br.readLine();
 			while(line !=null) {
 				String[] res = line.split("\\s+");
-				addresses.put(res[0], data_path+res[0]+".txt");
+				addresses.put(res[0], data_path+res[0]);
 				LinkedList<String> columns = new LinkedList<String>();
-				for (int i=1; i<res.length; i++) {
+				for (int i = 1; i<res.length; i++) {
 					columns.add(res[i]);
 				}
 				schemas.put(res[0], columns);

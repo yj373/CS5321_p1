@@ -5,7 +5,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
-import data.Constants;
+import data.Dynamic_properties;
 import data.Tuple;
 
 public abstract class Operator {
@@ -22,14 +22,15 @@ public abstract class Operator {
 	/*Print out all the output tuple
 	 * */
 	public void dump() {
-		String output_path = Constants.OUTPUT_PATH;
+		String output_path = Dynamic_properties.OUTPUT_PATH;
+		new File (output_path).mkdirs();
 		File file = new File(output_path+"dump.txt");
 		try {
 			BufferedWriter bw = new BufferedWriter(new FileWriter(file));
 			Tuple tuple = getNextTuple();
-			while (tuple!=null) {
-				System.out.println(tuple.toString());
-				bw.write(tuple.toString());
+			while (tuple != null) {
+				tuple.printData();
+				bw.write(tuple.getTupleData().toString());
 				tuple = getNextTuple();
 			}
 			bw.close();			
