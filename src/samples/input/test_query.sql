@@ -1,1 +1,1 @@
-SELECT * FROM Sailors, Boats;
+SELECT * FROM Sailors, Boats WHERE Sailors.A<5 AND Sailors.B>100;

@@ -7,6 +7,7 @@ import java.util.Map;
 import data.Tuple;
 import net.sf.jsqlparser.expression.Expression;
 import net.sf.jsqlparser.parser.CCJSqlParser;
+import net.sf.jsqlparser.schema.Table;
 import net.sf.jsqlparser.statement.Statement;
 import net.sf.jsqlparser.statement.select.Select;
 import net.sf.jsqlparser.statement.select.SelectItem;
@@ -67,6 +68,11 @@ public class ParserExample {
 				}
 				if (ps.getFromItem()!=null) {
 					System.out.println(ps.getFromItem().toString());
+					Table t = (Table)ps.getFromItem();
+					System.out.println(t.getWholeTableName());
+					System.out.println(t.getAlias());
+					System.out.println(t.getName());
+					
 				}
 				if(ps.getFromItem().getAlias()!=null) {
 					System.out.println(ps.getFromItem().getAlias());

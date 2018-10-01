@@ -4,6 +4,7 @@ import java.io.FileReader;
 import java.util.List;
 
 import data.Dynamic_properties;
+import net.sf.jsqlparser.expression.operators.relational.ExpressionList;
 import net.sf.jsqlparser.parser.CCJSqlParser;
 import net.sf.jsqlparser.statement.Statement;
 import net.sf.jsqlparser.statement.select.PlainSelect;

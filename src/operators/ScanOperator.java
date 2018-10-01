@@ -12,6 +12,7 @@ import data.Tuple;
 //Deal with Select * From Table
 public class ScanOperator extends Operator{
 	
+	private Operator parent;
 	private String tableName;
 	private String tableAddress;
 	private File tableFile;
@@ -25,7 +26,8 @@ public class ScanOperator extends Operator{
 		try {
 			String data = readPointer.readLine();
 			if (data!=null) {
-				Tuple tuple = new Tuple(data, tableName, attributes);
+				//Handle aliases
+				Tuple tuple = new Tuple(data, tableAliase, attributes);
 				return tuple;
 			}
 		} catch (IOException e) {
@@ -51,13 +53,13 @@ public class ScanOperator extends Operator{
 	public ScanOperator() {
 		
 	}
-	public ScanOperator(String table_info) {
-		String[] aim_table = table_info.split("\\s+");
-		if (aim_table.length<1) {
+	public ScanOperator(String tableInfo) {
+		String[] aimTable = tableInfo.split("\\s+");
+		if (aimTable.length<1) {
 			this.tableName = null;
 			return;
 		}
-		this.tableName = aim_table[0];
+		this.tableName = aimTable[0];
 		this.tableAddress = DataBase.getInstance().getAddresses(tableName);
 		this.tableFile = new File(tableAddress);
 		try {
@@ -66,7 +68,36 @@ public class ScanOperator extends Operator{
 			e.printStackTrace();
 			e.getMessage();
 		}
-		this.tableAliase = aim_table[aim_table.length-1];
+		this.tableAliase = aimTable[aimTable.length-1];
+		this.attributes = DataBase.getInstance().getSchema(tableName);
+	}
+	
+	public ScanOperator(String tableName, String tableAliase) {
+		this.tableName = tableName;
+		this.tableAddress = DataBase.getInstance().getAddresses(tableName);
+		this.tableFile = new File(tableAddress);
+		try {
+			this.readPointer = new RandomAccessFile(this.tableFile, "r");
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+			e.getMessage();
+		}
+		this.tableAliase = tableAliase;
+		this.attributes = DataBase.getInstance().getSchema(tableName);
+	}
+	
+	public ScanOperator(String tableName, String tableAliase, Operator op) {
+		this.parent = op;
+		this.tableName = tableName;
+		this.tableAddress = DataBase.getInstance().getAddresses(tableName);
+		this.tableFile = new File(tableAddress);
+		try {
+			this.readPointer = new RandomAccessFile(this.tableFile, "r");
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+			e.getMessage();
+		}
+		this.tableAliase = tableAliase;
 		this.attributes = DataBase.getInstance().getSchema(tableName);
 	}
 	
@@ -92,6 +123,15 @@ public class ScanOperator extends Operator{
 
 	public RandomAccessFile getRead_pointer() {
 		return readPointer;
+	}
+	
+	public Operator getParent() {
+		return parent;
+	}
+	
+	//Update parent
+	public void setParent(Operator op) {
+		this.parent = op;
 	}
 
 	
