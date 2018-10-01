@@ -1,11 +1,18 @@
 package test;
 
+import operators.ProjectOperator;
 import operators.ScanOperator;
+import operators.SelectOperator;
 import data.Tuple;
+import net.sf.jsqlparser.JSQLParserException;
+import net.sf.jsqlparser.parser.CCJSqlParserManager;
+import net.sf.jsqlparser.statement.select.PlainSelect;
+import net.sf.jsqlparser.statement.select.Select;
 
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
 
+import java.io.StringReader;
 import java.util.LinkedList;
 
 class ScanOperatorTest {
@@ -83,7 +90,32 @@ class ScanOperatorTest {
 		statements[0] = "SELECT Sailors.A, Sailors.B FROM Sailors;";
 		statements[1] = "SELECT Sailors.B, Sailors.A FROM Sailors;";
 		statements[2] = "SELECT * FROM Sailors;";
+		statements[3] = "SELECT * FROM Reserves;";
+		statements[4] = "SELECT * FROM Boats;";
+		
+		try {
+			for (int i=0; i< statements.length; i++) {
+				System.out.println("*******when statement is : " + statements[i]);
+				String statement = statements[i];
+				CCJSqlParserManager parserManager = new CCJSqlParserManager();
+				PlainSelect ps;
+				
+				ps = (PlainSelect) ((Select) parserManager.parse(new StringReader(statement))).getSelectBody();
+		
+				String table_info = ps.getFromItem().toString();
+				ScanOperator scanOp = new ScanOperator(table_info);
+				SelectOperator selectOp = new SelectOperator(ps,scanOp);
+				ProjectOperator projectOp = new ProjectOperator(ps, selectOp);
+				projectOp.dump();
+				System.out.println("*******end*********");
+				System.out.println();
+			}
+		} catch (JSQLParserException e) {
+			e.printStackTrace();
+		}
+		
 	}
+	
 	
 
 }
