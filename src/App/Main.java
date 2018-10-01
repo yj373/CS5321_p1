@@ -8,11 +8,12 @@ import net.sf.jsqlparser.statement.Statement;
 import net.sf.jsqlparser.statement.select.PlainSelect;
 import net.sf.jsqlparser.statement.select.Select;
 import operators.ScanOperator;
+import operators.SelectOperator;
 
 public class Main {
 
 	public static void main(String[] args) {
-		String queriesFile = Dynamic_properties.QUERY_PATH;
+		String queriesFile = Dynamic_properties.TEST_QUERY_PATH;
 		try {
 			CCJSqlParser parser = new CCJSqlParser(new FileReader(queriesFile));
 			Statement statement = parser.Statement();
@@ -20,7 +21,7 @@ public class Main {
 			PlainSelect ps = (PlainSelect)select.getSelectBody();
 			String table_info = ps.getFromItem().toString();
 			ScanOperator scanOp = new ScanOperator(table_info);
-			scanOp.dump();
+			SelectOperator selectOp = new SelectOperator(ps,scanOp);
 		} catch (Exception e) {
 			System.err.println("Exception occurred during parsing");
 			e.printStackTrace();

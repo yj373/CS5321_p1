@@ -1,0 +1,1 @@
+SELECT Sailors.A FROM Sailors WHERE Sailors.A > 3;
