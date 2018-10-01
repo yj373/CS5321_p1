@@ -20,7 +20,7 @@ class SelectOperatorTest {
 
 		String[] statements = new String[1];
 		
-		statements[0] = "SELECT * FROM Sailors S WHERE S.B = 300;";
+		statements[0] = "SELECT * FROM Sailors S WHERE S.B = 200;";
 		
 		for (int i=0; i< statements.length; i++) {
 			System.out.println("*******when statement is : " + statements[i]);
@@ -31,8 +31,9 @@ class SelectOperatorTest {
 			String table_info = ps.getFromItem().toString();
 			ScanOperator scanOp = new ScanOperator(table_info);
 			SelectOperator selectOp = new SelectOperator(ps,scanOp);
-			ProjectOperator projectOp = new ProjectOperator(ps, selectOp);
-			projectOp.dump();
+			selectOp.dump();
+			//ProjectOperator projectOp = new ProjectOperator(ps, selectOp);
+			//projectOp.dump();
 			System.out.println("*******end*********");
 			System.out.println();
 		}

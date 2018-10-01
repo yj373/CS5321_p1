@@ -24,7 +24,7 @@ class SortOperatorTest {
 		statements[0] = "SELECT * FROM Sailors;";
 		statements[1] = "SELECT * FROM Sailors S ORDER BY S.B;";
 		statements[2] = "SELECT S.B, S.C FROM Sailors S Order By S.B;";
-		statements[3] = "SELECT * FROM Sailors WHERE Sailors.C = 50 ORDER BY Sailors.B;";
+		statements[3] = "SELECT * FROM Sailors WHERE Sailors.B = 100 ORDER BY Sailors.C;";
 		
 		
 		for (int i=0; i< statements.length; i++) {
