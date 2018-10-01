@@ -10,6 +10,7 @@ import net.sf.jsqlparser.statement.select.Select;
 import operators.ProjectOperator;
 import operators.ScanOperator;
 import operators.SelectOperator;
+import operators.SortOperator;
 
 public class Main {
 
@@ -24,7 +25,8 @@ public class Main {
 			ScanOperator scanOp = new ScanOperator(table_info);
 			SelectOperator selectOp = new SelectOperator(ps,scanOp);
 			ProjectOperator projectOp = new ProjectOperator(ps, selectOp);
-			projectOp.dump();
+			SortOperator sortOp = new SortOperator(ps, projectOp);
+			sortOp.dump();
 		} catch (Exception e) {
 			System.err.println("Exception occurred during parsing");
 			e.printStackTrace();

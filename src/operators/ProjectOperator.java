@@ -1,6 +1,8 @@
 package operators;
 
+import java.util.Deque;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -11,7 +13,7 @@ import net.sf.jsqlparser.statement.select.SelectItem;
 public class ProjectOperator extends Operator{
 	
 	/**child operator of current operator*/
-	private Operator childOp = null;
+	private Operator child = null;
 	/**store information of needed attributes*/
 	private List<SelectItem> selectItems;
 	/**return all attributes or return specific attributes*/
@@ -23,7 +25,7 @@ public class ProjectOperator extends Operator{
 	 * 
 	 */
 	public ProjectOperator(PlainSelect plainSelect,Operator op) {
-		childOp = op;
+		child = op;
 		selectItems = plainSelect.getSelectItems();
 		if (selectItems.get(0).toString() == "*") {
 			allColumns = true;
@@ -40,7 +42,7 @@ public class ProjectOperator extends Operator{
 	@Override
 	public Tuple getNextTuple() {
 		
-		Tuple current = childOp.getNextTuple();
+		Tuple current = child.getNextTuple();
 		if (current != null && !allColumns) {
 			//Assume there must be corresponding columns
 			//in the given tuple
@@ -68,8 +70,23 @@ public class ProjectOperator extends Operator{
 	 */
 	@Override
 	public void reset() {
-		childOp.reset();
+		child.reset();
 		
+	}
+	
+	/**
+	 * getter method to get child
+	 */
+	public Operator getChild() {
+		return child;
+	}
+	
+	
+	/**
+	 * setter method to set child
+	 */
+	public void setChild(Operator op) {
+		child = op;
 	}
 
 }
