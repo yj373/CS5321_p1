@@ -1,3 +1,4 @@
+SELECT * FROM Sailors ORDER BY Sailors.B, S.A;
 SELECT Sailors.A , S.B FROM Sailors;
 SELECT * FROM Sailors;
 SELECT Sailors.A FROM Sailors;

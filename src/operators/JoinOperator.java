@@ -5,6 +5,7 @@ import java.util.*;
 import data.Tuple;
 
 public class JoinOperator extends Operator{
+
 	private Operator joinLeft;
 	private Operator joinRight;
     private Tuple currLeftTup;
@@ -18,6 +19,7 @@ public class JoinOperator extends Operator{
 	    currRightTup = null;
 	}
 	
+
 	@Override
 	public Tuple getNextTuple() {		
 		// Corner Case: when there are less than two operators under join operator.
