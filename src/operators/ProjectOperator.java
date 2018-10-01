@@ -22,7 +22,7 @@ public class ProjectOperator extends Operator{
 	 * initialize childOp.
 	 * 
 	 */
-	public ProjectOperator(Operator op, PlainSelect plainSelect) {
+	public ProjectOperator(PlainSelect plainSelect,Operator op) {
 		childOp = op;
 		selectItems = plainSelect.getSelectItems();
 		if (selectItems.get(0).toString() == "*") {

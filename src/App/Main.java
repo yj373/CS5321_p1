@@ -7,6 +7,7 @@ import net.sf.jsqlparser.parser.CCJSqlParser;
 import net.sf.jsqlparser.statement.Statement;
 import net.sf.jsqlparser.statement.select.PlainSelect;
 import net.sf.jsqlparser.statement.select.Select;
+import operators.ProjectOperator;
 import operators.ScanOperator;
 import operators.SelectOperator;
 
@@ -22,6 +23,8 @@ public class Main {
 			String table_info = ps.getFromItem().toString();
 			ScanOperator scanOp = new ScanOperator(table_info);
 			SelectOperator selectOp = new SelectOperator(ps,scanOp);
+			ProjectOperator projectOp = new ProjectOperator(ps, selectOp);
+			projectOp.dump();
 		} catch (Exception e) {
 			System.err.println("Exception occurred during parsing");
 			e.printStackTrace();
