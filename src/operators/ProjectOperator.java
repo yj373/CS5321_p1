@@ -52,7 +52,7 @@ public class ProjectOperator extends Operator{
 				String attributeName = expre.toString();
 				Integer dataIndex = current.getSchema().get(attributeName);
 				if (dataIndex!=null) {
-					data[index] = current.getTupleData()[dataIndex];
+					data[index] = current.getData()[dataIndex];
 					schema.put(attributeName, index);
 					index++;
 				}	
