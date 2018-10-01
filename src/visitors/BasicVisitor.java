@@ -57,7 +57,7 @@ import net.sf.jsqlparser.statement.truncate.Truncate;
 import net.sf.jsqlparser.statement.update.Update;
 import operators.Operator;
 
-public class BasicVisitor implements SelectVisitor, FromItemVisitor, ExpressionVisitor {
+public class BasicVisitor implements SelectVisitor, FromItemVisitor {
 	private Operator op=null;
 	
 	public Operator getQueryPlan(Select select) {
@@ -65,192 +65,23 @@ public class BasicVisitor implements SelectVisitor, FromItemVisitor, ExpressionV
 		return op;
 	}
 
-	public void visit(NullValue arg0) {
+	public void visit(PlainSelect arg0) {
 		// TODO Auto-generated method stub
 		
 	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 
-	public void visit(Function arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	public void visit(InverseExpression arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	public void visit(JdbcParameter arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	public void visit(DoubleValue arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	public void visit(LongValue arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	public void visit(DateValue arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	public void visit(TimeValue arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	public void visit(TimestampValue arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	public void visit(Parenthesis arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	public void visit(StringValue arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	public void visit(Addition arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	public void visit(Division arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	public void visit(Multiplication arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	public void visit(Subtraction arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	public void visit(AndExpression arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	public void visit(OrExpression arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	public void visit(Between arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	public void visit(EqualsTo arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	public void visit(GreaterThan arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	public void visit(GreaterThanEquals arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	public void visit(InExpression arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	public void visit(IsNullExpression arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	public void visit(LikeExpression arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	public void visit(MinorThan arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	public void visit(MinorThanEquals arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	public void visit(NotEqualsTo arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	public void visit(Column arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	public void visit(CaseExpression arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	public void visit(WhenClause arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	public void visit(ExistsExpression arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	public void visit(AllComparisonExpression arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	public void visit(AnyComparisonExpression arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	public void visit(Concat arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	public void visit(Matches arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	public void visit(BitwiseAnd arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	public void visit(BitwiseOr arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	public void visit(BitwiseXor arg0) {
+	public void visit(Union arg0) {
 		// TODO Auto-generated method stub
 		
 	}
@@ -270,15 +101,6 @@ public class BasicVisitor implements SelectVisitor, FromItemVisitor, ExpressionV
 		
 	}
 
-	public void visit(PlainSelect arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	public void visit(Union arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-
+	
 
 }
