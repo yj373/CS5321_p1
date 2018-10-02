@@ -12,9 +12,11 @@ public class DuplicateEliminationOperator extends Operator{
 	public Tuple getNextTuple() {
 		Tuple t = child.getNextTuple();
 		if (prevTuple != null) {
-			while (isEqual(t, prevTuple)) {
+			while (t!= null && isEqual(t, prevTuple)) {
 				t = child.getNextTuple();
 			}
+		} else {
+			prevTuple = t;
 		}
 		return t;
 	}
