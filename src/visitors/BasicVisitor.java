@@ -91,7 +91,9 @@ public class BasicVisitor implements SelectVisitor, FromItemVisitor, ItemsListVi
  
 			}
 		}
-		ps.getWhere().accept(this);
+		if(ps.getWhere() != null) {
+			ps.getWhere().accept(this);
+		}
 		HashSet<Operator> operatorChecker = new HashSet<Operator>();
 		for(String s : tableDirectory.keySet()) {
 			Operator candiOp = tableDirectory.get(s)[1];

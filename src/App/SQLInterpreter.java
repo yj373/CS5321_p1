@@ -40,7 +40,8 @@ public class SQLInterpreter {
 			}
 
 		} catch (Exception e){
-			
+			e.printStackTrace();
+			e.getMessage();
 		}
 
 	}
