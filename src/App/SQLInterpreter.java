@@ -23,7 +23,6 @@ public class SQLInterpreter {
 		String queriesFile = Dynamic_properties.queryPath;
 		try {
 			Operator root = null;
-			BasicVisitor visitor = new BasicVisitor();
 			CCJSqlParser parser = new CCJSqlParser(new FileReader(queriesFile));
 			net.sf.jsqlparser.statement.Statement statement;
 			int index = 1;
@@ -31,8 +30,14 @@ public class SQLInterpreter {
 			while ((statement = parser.Statement()) != null) {
 				System.out.println("Read statement: " + statement);
 				Select select = (Select) statement;
-				root = visitor.getQueryPlan(select);
-				writeToFile (index, root);
+				BasicVisitor visitor = new BasicVisitor();
+				try {
+					root = visitor.getQueryPlan(select);
+					writeToFile (index, root);
+				} catch (Exception e) {
+					System.err.println("Exception occurred during paring query" + index);
+			        //e.printStackTrace();
+				}
 				index++;	
 			}
 
