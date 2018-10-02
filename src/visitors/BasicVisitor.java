@@ -91,7 +91,11 @@ public class BasicVisitor implements SelectVisitor, FromItemVisitor, ItemsListVi
  
 			}
 		}
+<<<<<<< HEAD
 		if(ps.getWhere() != null) {
+=======
+		if (ps.getWhere() != null) {
+>>>>>>> bec7748f34774435ea6f02b300088daae50a41b6
 			ps.getWhere().accept(this);
 		}
 		HashSet<Operator> operatorChecker = new HashSet<Operator>();
