@@ -21,7 +21,7 @@ class DuplicateEliminationOperatorTest {
 	@Test
 	public void getNextTupleTest() throws JSQLParserException {
 		String[] statements = new String[1];
-		statements[0] = "SELECT * FROM Reserves R WHERE R.H = 101 ORDER BY R.H;";
+		statements[0] = "SELECT DISTINCT * FROM Reserves R WHERE R.H = 101 ORDER BY R.H;";
 
 
 		for (int i=0; i< statements.length; i++) {

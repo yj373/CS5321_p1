@@ -12,8 +12,8 @@ import data.Tuple;
 public abstract class Operator {
 	private Operator parent;
 	private LinkedList<Operator> child;
-	
-	
+
+
 	public LinkedList<Operator> getChild() {
 		return child;
 	}
@@ -26,14 +26,16 @@ public abstract class Operator {
 	 *output, otherwise, return null
 	 * */
 	public abstract Tuple getNextTuple();
-	
+
 	/*Reset the state of the operator, so that
 	 * it will output from the beginning
 	 * */
 	public abstract void reset();
-	
-	/*Print out all the output tuple
-	 * */
+
+	/**
+	 * Print out all the output tuple
+	 */
+
 	public void dump() {
 		reset();
 		Tuple tuple = getNextTuple();
@@ -43,12 +45,18 @@ public abstract class Operator {
 		}
 		reset();
 	}
-	
+
+	/**
+	 * Write all Tuples to corresponding .txt file
+	 * 
+	 * @param index index of .txt file
+	 */
+
 	public void dump(int index) {
 		reset();
 		String output_path = Dynamic_properties.outputPath;
 		new File (output_path).mkdirs();
-		File file = new File(output_path + "/query" + "i" + ".txt");
+		File file = new File(output_path + "/query" + index + ".txt");
 		try {
 			BufferedWriter bw = new BufferedWriter(new FileWriter(file));
 			Tuple tuple = getNextTuple();
@@ -56,13 +64,19 @@ public abstract class Operator {
 				bw.write(tuple.getTupleData().toString() + '\n');
 				tuple = getNextTuple();
 			}
-			bw.close();			
+			bw.close();   
 		}catch(IOException e) {
 			e.printStackTrace();
 			e.getMessage();
 		}
 		reset();
 	}
+
+
+
+
+
+
 
 	public Operator getParent() {
 		return parent;
@@ -71,5 +85,6 @@ public abstract class Operator {
 	public void setParent(Operator parent) {
 		this.parent = parent;
 	}
+
 
 }
