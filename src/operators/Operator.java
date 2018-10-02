@@ -71,6 +71,5 @@ public abstract class Operator {
 	public void setParent(Operator parent) {
 		this.parent = parent;
 	}
-	
 
 }

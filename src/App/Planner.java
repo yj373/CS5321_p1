@@ -12,7 +12,7 @@ public class Planner {
 	
 	public void parse_queries() {
 		try {
-			CCJSqlParser parser = new CCJSqlParser(new FileReader(Dynamic_properties.QUERY_PATH));
+			CCJSqlParser parser = new CCJSqlParser(new FileReader(Dynamic_properties.queryPath));
 			Statement statement;
 			while ((statement = parser.Statement()) != null) {
 				System.out.println("Read statement: " + statement);

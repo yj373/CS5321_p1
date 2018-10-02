@@ -37,7 +37,7 @@ class DuplicateEliminationOperatorTest {
 			ProjectOperator projectOp = new ProjectOperator(ps, sortOp);
 			projectOp.dump();
 			System.out.println();
-			DuplicateEliminationOperator dupOp = new DuplicateEliminationOperator(projectOp);
+			DuplicateEliminationOperator dupOp = new DuplicateEliminationOperator(ps, projectOp);
 			dupOp.dump();
 			System.out.println("*******end*********");
 			System.out.println();

@@ -22,55 +22,13 @@ public class Main {
 		
 		SQLInterpreter.init(args);
 		
-		
-		
-		String queriesFile = Dynamic_properties.testQueryPath;
 		try {
-			CCJSqlParser parser = new CCJSqlParser(new FileReader(queriesFile));
-			Statement statement = parser.Statement();
-			Select select = (Select)statement;
-			PlainSelect ps = (PlainSelect)select.getSelectBody();
-			String table_info = ps.getFromItem().toString();
-			List table_info1 = ps.getJoins();
-			List list = ps.getJoins();
-			if (list != null){
-				System.out.println(list.get(0).toString());
-			}
-			ScanOperator scanOp = new ScanOperator(table_info);
-
-			SelectOperator selectOp = new SelectOperator(ps,scanOp);
-			ProjectOperator projectOp = new ProjectOperator(ps, selectOp);
-			SortOperator sortOp = new SortOperator(ps, projectOp);
-			sortOp.dump();
-
-			ScanOperator scanOp1 = new ScanOperator(table_info1.get(0).toString());
-			JoinOperator joinOp = new JoinOperator(scanOp, scanOp1);
-//			SelectOperator selectOp = new SelectOperator(ps,scanOp);
-//			ProjectOperator projectOp = new ProjectOperator(ps, joinOp);
-//			projectOp.dump();
-
+			SQLInterpreter.process();
+			
 		} catch (Exception e) {
 			System.err.println("Exception occurred during parsing");
 			e.printStackTrace();
 		}
 
 	}
-}
-
-class ProcessCommand {
-	public void init(String inputPath, String outputPath) {
-		Dynamic_properties.setPath(inputPath, outputPath);
-	}
-	
-	public void process() throws FileNotFoundException, ParseException {
-		CCJSqlParser parser = new CCJSqlParser(new FileReader(Dynamic_properties.queryPath));
-		Statement statement = parser.Statement();
-		int i = 0;
-		while (statement != null) {
-			Select select = (Select)statement;
-			//// process the ///////
-			
-		}
-	}
-	
 }
