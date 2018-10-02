@@ -1,27 +1,34 @@
 package operators;
 
+import java.util.LinkedList;
+
 import data.Tuple;
+import net.sf.jsqlparser.statement.select.PlainSelect;
 
 public class DuplicateEliminationOperator extends Operator{
 	
-	private Operator child;
 	private Tuple prevTuple;
+	boolean workState; 
 	
 
 	@Override
 	public Tuple getNextTuple() {
+		Operator child = super.getChild().get(0);
 		Tuple t = child.getNextTuple();
-		if (prevTuple != null) {
-			while (isEqual(t, prevTuple)) {
-				t = child.getNextTuple();
+		if(workState) {
+			if (prevTuple != null) {
+				while (isEqual(t, prevTuple)) {
+					t = child.getNextTuple();
+				}
 			}
 		}
+		
 		return t;
 	}
 
 	@Override
 	public void reset() {
-		child.reset();
+		super.getChild().get(0).reset();
 		
 	}
 	
@@ -29,18 +36,18 @@ public class DuplicateEliminationOperator extends Operator{
 	public DuplicateEliminationOperator() {
 		
 	}
-	public DuplicateEliminationOperator(Operator op) {
-		this.child = op;
+	public DuplicateEliminationOperator(PlainSelect ps, Operator op) {
+		if (ps.getDistinct()!=null) {
+			workState = true;
+		}else {
+			workState = false;
+		}
+		LinkedList<Operator> newChild = new LinkedList<Operator>();
+		newChild.add(op);
+		super.setChild(newChild);
 	}
 	//Getters and Setters
 
-	public Operator getChild() {
-		return child;
-	}
-
-	public void setChild(Operator child) {
-		this.child = child;
-	}
 
 	public Tuple getPrevTuple() {
 		return prevTuple;

@@ -4,7 +4,6 @@ import java.io.FileReader;
 import java.util.List;
 
 import data.Dynamic_properties;
-import net.sf.jsqlparser.expression.operators.relational.ExpressionList;
 import net.sf.jsqlparser.parser.CCJSqlParser;
 import net.sf.jsqlparser.statement.Statement;
 import net.sf.jsqlparser.statement.select.PlainSelect;
@@ -26,7 +25,6 @@ public class Main {
 			PlainSelect ps = (PlainSelect)select.getSelectBody();
 			String table_info = ps.getFromItem().toString();
 			List table_info1 = ps.getJoins();
-			
 			List list = ps.getJoins();
 			if (list != null){
 				System.out.println(list.get(0).toString());

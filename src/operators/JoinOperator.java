@@ -6,15 +6,16 @@ import data.Tuple;
 
 public class JoinOperator extends Operator{
 
-	private Operator joinLeft;
-	private Operator joinRight;
     private Tuple currLeftTup;
     private Tuple currRightTup;
     
 	// Constructor
 	public JoinOperator(Operator op1, Operator op2) {
-	    joinLeft = op1;
-	    joinRight = op2;
+		LinkedList<Operator> childList = new LinkedList<Operator>();
+		childList.add(op1);
+		childList.add(op2);
+		super.setChild(childList);
+		setChild(childList);
 	    currLeftTup = null;
 	    currRightTup = null;
 	}
@@ -23,29 +24,30 @@ public class JoinOperator extends Operator{
 	@Override
 	public Tuple getNextTuple() {		
 		// Corner Case: when there are less than two operators under join operator.
-		if (joinLeft == null && joinRight == null) {
+		LinkedList<Operator> childList = super.getChild();
+		if (childList.get(0)== null && childList.get(1) == null) {
 			return null;
 		}
-		if (joinLeft == null || joinRight == null) {
-			return joinLeft == null ? joinRight.getNextTuple() : joinLeft.getNextTuple();
+		if (childList.get(0) == null || childList.get(1) == null) {
+			return childList.get(0) == null ? childList.get(1).getNextTuple() : childList.get(0).getNextTuple();
 		}
 
 		// If currLeftTup and currRightTup are both null, it is the start of join
 		// If currLeftTup is null but currRightTup is not null, it is the end of join 
 	    if (currLeftTup == null) {
 	    	if (currRightTup == null) {
-		    	currLeftTup = joinLeft.getNextTuple();
-		    	currRightTup = joinRight.getNextTuple();
+		    	currLeftTup = childList.get(0).getNextTuple();
+		    	currRightTup = childList.get(1).getNextTuple();
 	    	} else {
 	    		return null;
 	    	}
 	    } else {
 	    	if (currRightTup == null) {
-		    	joinRight.reset();
-		    	currLeftTup = joinLeft.getNextTuple();
-		    	currRightTup = joinRight.getNextTuple();
+		    	childList.get(1).reset();
+		    	currLeftTup = childList.get(0).getNextTuple();
+		    	currRightTup = childList.get(1).getNextTuple();
 		    } else {
-		    	currRightTup = joinRight.getNextTuple();	
+		    	currRightTup = childList.get(1).getNextTuple();	
 		    }	    	
 	    }
    
@@ -86,29 +88,36 @@ public class JoinOperator extends Operator{
 
 	@Override
 	public void reset() {
-		if (joinLeft != null) {
-			joinLeft.reset();
+		LinkedList<Operator> childList = super.getChild();
+		if (childList.get(0) != null) {
+			childList.get(0).reset();
 		}
-		if (joinRight != null) {
-			joinRight.reset();
+		if (childList.get(1) != null) {
+			childList.get(1).reset();
 		}
 		
 	}
 	
 	// Getters of children
 	public Operator getLeftChild() {
-		return joinLeft;
+		return super.getChild().get(0);
 	}
 	public Operator getRightChild() {
-		return joinRight;
+		return super.getChild().get(1);
 	}
 	
 	// Setters of children
 	
 	public void setLeftChild(Operator op) {
-		joinLeft = op;
+		LinkedList<Operator> newChild = super.getChild();
+		newChild.remove(0);
+		newChild.addFirst(op);
+		super.setChild(newChild);
 	}
     public void setRightChild(Operator op) {
-    	joinRight = op;
+    	LinkedList<Operator> newChild = super.getChild();
+    	newChild.remove(1);
+		newChild.add(op);
+		super.setChild(newChild);
     }
 }

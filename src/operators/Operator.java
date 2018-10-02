@@ -4,11 +4,24 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.LinkedList;
 
 import data.Dynamic_properties;
 import data.Tuple;
 
 public abstract class Operator {
+	private Operator parent;
+	private LinkedList<Operator> child;
+	
+	
+	public LinkedList<Operator> getChild() {
+		return child;
+	}
+
+	public void setChild(LinkedList<Operator> child) {
+		this.child = child;
+	}
+
 	/*Return the next next tuple, if there are some available 
 	 *output, otherwise, return null
 	 * */
@@ -40,5 +53,14 @@ public abstract class Operator {
 		}
 		reset();
 	}
+
+	public Operator getParent() {
+		return parent;
+	}
+
+	public void setParent(Operator parent) {
+		this.parent = parent;
+	}
+	
 
 }

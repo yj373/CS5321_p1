@@ -12,8 +12,6 @@ import net.sf.jsqlparser.statement.select.SelectItem;
 
 public class ProjectOperator extends Operator{
 	
-	/**child operator of current operator*/
-	private Operator child = null;
 	/**store information of needed attributes*/
 	private List<SelectItem> selectItems;
 	/**return all attributes or return specific attributes*/
@@ -26,7 +24,9 @@ public class ProjectOperator extends Operator{
 	 */
 
 	public ProjectOperator(PlainSelect plainSelect,Operator op) {
-		child = op;
+		LinkedList<Operator> newChild = new LinkedList<Operator>();
+		newChild.add(op);
+		super.setChild(newChild);
 		selectItems = plainSelect.getSelectItems();
 		if (selectItems.get(0).toString() == "*") {
 			allColumns = true;
@@ -42,7 +42,7 @@ public class ProjectOperator extends Operator{
 	 */
 	@Override
 	public Tuple getNextTuple() {
-		
+		Operator child = getChild().get(0);
 		Tuple current = child.getNextTuple();
 		if (current != null && !allColumns) {
 			//Assume there must be corresponding columns
@@ -71,23 +71,8 @@ public class ProjectOperator extends Operator{
 	 */
 	@Override
 	public void reset() {
-		child.reset();
+		getChild().get(0).reset();
 		
 	}
 	
-	/**
-	 * getter method to get child
-	 */
-	public Operator getChild() {
-		return child;
-	}
-	
-	
-	/**
-	 * setter method to set child
-	 */
-	public void setChild(Operator op) {
-		child = op;
-	}
-
 }

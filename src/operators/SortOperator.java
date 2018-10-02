@@ -69,12 +69,6 @@ public class SortOperator extends Operator{
 		currentIndex = 0;
 	}
 	
-	/**
-	 * getter method to get child
-	 */
-	public Operator getChild() {
-		return child;
-	}
 	
 	
 	/**

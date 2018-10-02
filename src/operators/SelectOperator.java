@@ -12,7 +12,6 @@ import visitors.BasicExpressionVisitor;
 //Deal with Select * From Table Where Table.A<...
 public class SelectOperator extends Operator{
 	
-	private Operator child;
 	private Expression expression;
 	private String tableName;
 	private String tableAliase;
@@ -20,14 +19,14 @@ public class SelectOperator extends Operator{
 	@Override
 	public Tuple getNextTuple() {
 		// TODO Auto-generated method stub
-		Tuple t = child.getNextTuple();
+		Tuple t = getChild().getFirst().getNextTuple();
 		if(expression!=null) {
 			while (t!=null) {
 				BasicExpressionVisitor bev = new BasicExpressionVisitor(t);
 				expression.accept(bev);
 				boolean res = bev.getResult().getLast();
 				if(res) break;
-				t = child.getNextTuple();
+				t = getChild().getFirst().getNextTuple();
 			}
 						
 		}
@@ -36,7 +35,7 @@ public class SelectOperator extends Operator{
 
 	@Override
 	public void reset() {
-		child.reset();
+		getChild().getFirst().reset();
 		
 	}
 	
@@ -45,38 +44,42 @@ public class SelectOperator extends Operator{
 		String tableInfo = ps.getFromItem().toString();
 		String[] aimTable = tableInfo.split("\\s+");
 		if (aimTable.length<1) {
-			this.child = null;
 			return;
 		}
-		this.child = op;
+		LinkedList<Operator> childList = new LinkedList<Operator>();
+		childList.add(op);
+		setChild(childList);
 		this.expression = ps.getWhere();
 		this.tableName = aimTable[0];
 		this.tableAliase = aimTable[aimTable.length-1];
 	}
 	
 	public SelectOperator(String tableName, String tableAliase, Expression ex, Operator op) {
-		this.child = op;
+		LinkedList<Operator> childList = new LinkedList<Operator>();
+		childList.add(op);
+		setChild(childList);
 		this.expression = ex;
 		this.tableName = tableName;
 		this.tableAliase = tableAliase;
 	}
 	
 	public SelectOperator(String tableAliase, Expression ex, Operator op) {
-		this.child = op;
+		LinkedList<Operator> childList = new LinkedList<Operator>();
+		childList.add(op);
+		setChild(childList);
 		this.expression = ex;
 		this.tableName = tableAliase;
 		this.tableAliase = tableAliase;
 	}
 	
+	public SelectOperator(Expression ex, Operator op) {
+		LinkedList<Operator> childList = new LinkedList<Operator>();
+		childList.add(op);
+		setChild(childList);
+		this.expression = ex;
+	}
 	
     //Getters and Setters
-	public Operator getChild() {
-		return child;
-	}
-
-	public void setChild(Operator child) {
-		this.child = child;
-	}
 
 	public Expression getExpression() {
 		return expression;

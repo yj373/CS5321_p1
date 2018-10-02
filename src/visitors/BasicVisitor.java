@@ -3,6 +3,7 @@ package visitors;
 
 import java.util.Deque;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Map;
 
@@ -56,8 +57,13 @@ import net.sf.jsqlparser.statement.select.SelectVisitor;
 import net.sf.jsqlparser.statement.select.SubJoin;
 import net.sf.jsqlparser.statement.select.SubSelect;
 import net.sf.jsqlparser.statement.select.Union;
+import operators.DuplicateEliminationOperator;
+import operators.JoinOperator;
 import operators.Operator;
+import operators.ProjectOperator;
 import operators.ScanOperator;
+import operators.SelectOperator;
+import operators.SortOperator;
 
 public class BasicVisitor implements SelectVisitor, FromItemVisitor, ItemsListVisitor, ExpressionVisitor{
 	
@@ -86,7 +92,26 @@ public class BasicVisitor implements SelectVisitor, FromItemVisitor, ItemsListVi
 			}
 		}
 		ps.getWhere().accept(this);
+		HashSet<Operator> operatorChecker = new HashSet<Operator>();
+		for(String s : tableDirectory.keySet()) {
+			Operator candiOp = tableDirectory.get(s)[1];
+			if (!operatorChecker.contains(candiOp)) {
+				joinStack.addFirst(candiOp);;
+				operatorChecker.add(candiOp);
+			}
+		}
 		
+		while (joinStack.size()>1) {
+			Operator left = joinStack.pop();
+			Operator right = joinStack.pop();
+			JoinOperator newJoin = new JoinOperator(left, right);
+			joinStack.addFirst(newJoin);
+		}
+		Operator finalJoinOperator = joinStack.pop();
+		ProjectOperator proOp = new ProjectOperator(ps, finalJoinOperator);
+		SortOperator sortOp = new SortOperator(ps, proOp);
+		DuplicateEliminationOperator dOp= new DuplicateEliminationOperator(ps, sortOp);
+		rootOp = dOp;
 	}
 	
 	public void visit(Table table) {
@@ -100,7 +125,8 @@ public class BasicVisitor implements SelectVisitor, FromItemVisitor, ItemsListVi
 	
 	@Override
 	public void visit(Column column) {
-		// TODO Auto-generated method stub
+		String tableAliase = column.getWholeColumnName();
+		currentTable.add(tableAliase);
 		
 	}
 	
@@ -122,8 +148,18 @@ public class BasicVisitor implements SelectVisitor, FromItemVisitor, ItemsListVi
 		Expression left = equals.getLeftExpression();
 		Expression right = equals.getRightExpression();
 		int expressionType = getExpressionType(left, right);
+		left.accept(this);
+		right.accept(this);
 		if (expressionType == 1) {
-			
+			String tableAliase = currentTable.getLast();
+			currentTable.removeLast();
+			addSelectOprator(tableAliase, equals);
+		}else {
+			String table1 = currentTable.getLast();
+			currentTable.removeLast();
+			String table2 = currentTable.getLast();
+			currentTable.removeLast();
+			addJoinOperator(table1, table2, equals);
 		}
 		
 		
@@ -164,6 +200,58 @@ public class BasicVisitor implements SelectVisitor, FromItemVisitor, ItemsListVi
 	private int getExpressionType(Expression e1, Expression e2) {
 		if (e1 instanceof Column && e2 instanceof Column) return 2;
 		return 1;
+	}
+	
+	private void addSelectOprator(String tableAliase, Expression ex) {
+		Operator root = tableDirectory.get(tableAliase)[0];
+		Operator end = tableDirectory.get(tableAliase)[1];
+		SelectOperator selectOp = new SelectOperator(tableAliase, ex, root);
+		if (root.equals(end)) {
+			Operator[] newValue = tableDirectory.get(tableAliase);
+			newValue[1] = selectOp;
+			tableDirectory.put(tableAliase, newValue);
+		}else {
+			if (root.getParent() instanceof JoinOperator) {
+				if (root.equals(root.getParent().getChild().get(0))) {
+					updateChildParentState(tableAliase, root, selectOp, 0);
+				}else {
+					updateChildParentState(tableAliase, root, selectOp, 1);
+				}
+			}else {
+				updateChildParentState(tableAliase, root, selectOp, 0);				
+			}
+		}
+		
+	}
+	
+	private void updateChildParentState(String tableAliase, Operator root, Operator newOp, int ind) {
+		LinkedList<Operator> newChild = root.getParent().getChild();
+		newChild.remove(ind);
+		if (ind == 0) {
+			newChild.addFirst(newOp);
+		}else {
+			newChild.add(newOp);
+		}
+		
+		root.getParent().setChild(newChild);
+		root.setParent(newOp);
+		Operator[] newValue = tableDirectory.get(tableAliase);
+		newValue[0] = root;
+		tableDirectory.put(tableAliase, newValue);
+		
+	}
+	
+	private void addJoinOperator(String table1, String table2, Expression ex) {
+		Operator end1 = tableDirectory.get(table1)[1];
+		Operator end2 = tableDirectory.get(table2)[1];
+		JoinOperator joinOp = new JoinOperator(end1, end2);
+		SelectOperator selectOp = new SelectOperator(ex, joinOp);
+		
+		Operator[] newValue = tableDirectory.get(table1);
+		newValue[1] = selectOp;
+		tableDirectory.put(table1, newValue);
+		tableDirectory.put(table2, newValue);
+		
 	}
 
 

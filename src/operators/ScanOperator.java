@@ -12,7 +12,6 @@ import data.Tuple;
 //Deal with Select * From Table
 public class ScanOperator extends Operator{
 	
-	private Operator parent;
 	private String tableName;
 	private String tableAddress;
 	private File tableFile;
@@ -87,7 +86,7 @@ public class ScanOperator extends Operator{
 	}
 	
 	public ScanOperator(String tableName, String tableAliase, Operator op) {
-		this.parent = op;
+		setParent(op);
 		this.tableName = tableName;
 		this.tableAddress = DataBase.getInstance().getAddresses(tableName);
 		this.tableFile = new File(tableAddress);
@@ -125,14 +124,6 @@ public class ScanOperator extends Operator{
 		return readPointer;
 	}
 	
-	public Operator getParent() {
-		return parent;
-	}
-	
-	//Update parent
-	public void setParent(Operator op) {
-		this.parent = op;
-	}
 
 	
 	
