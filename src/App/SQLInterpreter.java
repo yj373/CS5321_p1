@@ -9,8 +9,5 @@ public class SQLInterpreter {
 		Dynamic_properties.setPath(args[0], args[1]);
 		
 		
-		
-		
-		
 	}
 }
