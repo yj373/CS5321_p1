@@ -70,7 +70,7 @@ public class BasicVisitor implements SelectVisitor, FromItemVisitor, ItemsListVi
 	
 	private Operator rootOp = null;
 	private Deque<Operator> joinStack = new LinkedList<Operator>() ;
-	private Map<String, Operator[]> tableDirectory = new HashMap<String, Operator[]>();
+	private Map<String, LinkedList<Operator>> tableDirectory = new HashMap<String, LinkedList<Operator>>();
 	private LinkedList<String> currentTable = new LinkedList<String>();
 	
 	public Operator getQueryPlan(Select select) {
@@ -84,19 +84,20 @@ public class BasicVisitor implements SelectVisitor, FromItemVisitor, ItemsListVi
 			for(Object j: ps.getJoins()) {
 				String tableInfo = j.toString();
 				ScanOperator scanOp = new ScanOperator(tableInfo);
-				ScanOperator[] rootEnd = new ScanOperator[2];
-				rootEnd[0] = scanOp;
-				rootEnd[1] = scanOp;
+				LinkedList<Operator> rootEnd = new LinkedList<Operator>();
+				rootEnd.add(scanOp);
+				rootEnd.add(scanOp);
 				tableDirectory.put(scanOp.getTableAliase(), rootEnd);
  
 			}
 		}
+
 		if (ps.getWhere() != null) {
 			ps.getWhere().accept(this);
 		}
 		HashSet<Operator> operatorChecker = new HashSet<Operator>();
 		for(String s : tableDirectory.keySet()) {
-			Operator candiOp = tableDirectory.get(s)[1];
+			Operator candiOp = tableDirectory.get(s).get(1);
 			if (!operatorChecker.contains(candiOp)) {
 				joinStack.addFirst(candiOp);;
 				operatorChecker.add(candiOp);
@@ -104,8 +105,8 @@ public class BasicVisitor implements SelectVisitor, FromItemVisitor, ItemsListVi
 		}
 		
 		while (joinStack.size()>1) {
-			Operator left = joinStack.pop();
 			Operator right = joinStack.pop();
+			Operator left = joinStack.pop();
 			JoinOperator newJoin = new JoinOperator(left, right);
 			joinStack.addFirst(newJoin);
 		}
@@ -118,16 +119,17 @@ public class BasicVisitor implements SelectVisitor, FromItemVisitor, ItemsListVi
 	
 	public void visit(Table table) {
 		ScanOperator scanOp = new ScanOperator(table.getWholeTableName(), table.getAlias());
-		ScanOperator[] rootEnd = new ScanOperator[2];
-		rootEnd[0] = scanOp;
-		rootEnd[1] = scanOp;
+		LinkedList<Operator> rootEnd = new LinkedList<Operator>();
+		rootEnd.add(scanOp);
+		rootEnd.add(scanOp);
 		tableDirectory.put(scanOp.getTableAliase(), rootEnd);		
 		
 	}
 	
 	@Override
 	public void visit(Column column) {
-		String tableAliase = column.getWholeColumnName();
+		String tableAliase = column.getTable().getName();
+		//String tableAliase = tableInfo;
 		currentTable.add(tableAliase);
 		
 	}
@@ -262,11 +264,11 @@ public class BasicVisitor implements SelectVisitor, FromItemVisitor, ItemsListVi
 			currentTable.removeLast();
 			addSelectOprator(tableAliase, notEquals);
 		}else {
-			String table1 = currentTable.getLast();
+			String rightTable = currentTable.getLast();
 			currentTable.removeLast();
-			String table2 = currentTable.getLast();
+			String leftTable = currentTable.getLast();
 			currentTable.removeLast();
-			addJoinOperator(table1, table2, notEquals);
+			addJoinOperator(leftTable, rightTable, notEquals);
 		}
 		
 	}
@@ -279,12 +281,13 @@ public class BasicVisitor implements SelectVisitor, FromItemVisitor, ItemsListVi
 	}
 	
 	private void addSelectOprator(String tableAliase, Expression ex) {
-		Operator root = tableDirectory.get(tableAliase)[0];
-		Operator end = tableDirectory.get(tableAliase)[1];
+		Operator root = tableDirectory.get(tableAliase).get(0);
+		Operator end = tableDirectory.get(tableAliase).get(1);
 		SelectOperator selectOp = new SelectOperator(tableAliase, ex, root);
 		if (root.equals(end)) {
-			Operator[] newValue = tableDirectory.get(tableAliase);
-			newValue[1] = selectOp;
+			LinkedList<Operator> newValue = tableDirectory.get(tableAliase);
+			newValue.removeLast();
+			newValue.addLast(selectOp);
 			tableDirectory.put(tableAliase, newValue);
 		}else {
 			if (root.getParent() instanceof JoinOperator) {
@@ -311,20 +314,22 @@ public class BasicVisitor implements SelectVisitor, FromItemVisitor, ItemsListVi
 		
 		root.getParent().setChild(newChild);
 		root.setParent(newOp);
-		Operator[] newValue = tableDirectory.get(tableAliase);
-		newValue[0] = root;
+		LinkedList<Operator> newValue = tableDirectory.get(tableAliase);
+		newValue.removeFirst();
+		newValue.addFirst(root);
 		tableDirectory.put(tableAliase, newValue);
 		
 	}
 	
 	private void addJoinOperator(String table1, String table2, Expression ex) {
-		Operator end1 = tableDirectory.get(table1)[1];
-		Operator end2 = tableDirectory.get(table2)[1];
+		Operator end1 = tableDirectory.get(table1).get(1);
+		Operator end2 = tableDirectory.get(table2).get(1);
 		JoinOperator joinOp = new JoinOperator(end1, end2);
 		SelectOperator selectOp = new SelectOperator(ex, joinOp);
 		
-		Operator[] newValue = tableDirectory.get(table1);
-		newValue[1] = selectOp;
+		LinkedList<Operator> newValue = tableDirectory.get(table1);
+		newValue.removeLast();
+		newValue.addLast(selectOp);
 		tableDirectory.put(table1, newValue);
 		tableDirectory.put(table2, newValue);
 		

@@ -22,7 +22,8 @@ public class Main {
 		
 		SQLInterpreter.init(args);
 		SQLInterpreter.BuildQueryPlan();
-		
+
+
 
 		
 		
