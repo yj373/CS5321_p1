@@ -21,6 +21,11 @@ public abstract class Operator {
 	public void setChild(LinkedList<Operator> child) {
 		this.child = child;
 	}
+	public void setChild(Operator op) {
+		LinkedList<Operator> childList = new LinkedList<Operator>();
+		childList.add(op);
+		this.child = childList;
+	}
 
 	/*Return the next next tuple, if there are some available 
 	 *output, otherwise, return null

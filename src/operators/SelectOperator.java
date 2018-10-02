@@ -4,6 +4,7 @@ package operators;
 import java.util.LinkedList;
 
 import data.DataBase;
+import data.OrderedTable;
 import data.Tuple;
 import net.sf.jsqlparser.expression.Expression;
 import net.sf.jsqlparser.statement.select.PlainSelect;
@@ -13,8 +14,8 @@ import visitors.BasicExpressionVisitor;
 public class SelectOperator extends Operator{
 	
 	private Expression expression;
-	private String tableName;
-	private String tableAliase;
+	private LinkedList<OrderedTable> tableAliase;
+	private int expressionType;
 
 	@Override
 	public Tuple getNextTuple() {
@@ -46,38 +47,39 @@ public class SelectOperator extends Operator{
 		if (aimTable.length<1) {
 			return;
 		}
-		LinkedList<Operator> childList = new LinkedList<Operator>();
-		childList.add(op);
-		setChild(childList);
+		setChild(op);
 		this.expression = ps.getWhere();
-		this.tableName = aimTable[0];
-		this.tableAliase = aimTable[aimTable.length-1];
 	}
 	
-	public SelectOperator(String tableName, String tableAliase, Expression ex, Operator op) {
-		LinkedList<Operator> childList = new LinkedList<Operator>();
-		childList.add(op);
-		setChild(childList);
+//	public SelectOperator(String tName, String tAliase, Expression ex, Operator op, int exType) {
+//		setChild(op);
+//		this.expression = ex;
+//		tableName = new LinkedList<String>();
+//		tableName.add(tName);
+//		tableAliase = new LinkedList<String>();
+//		tableAliase.add(tAliase);
+//		this.expressionType = exType;
+//	}
+	
+	public SelectOperator(OrderedTable tAliase, Expression ex, Operator op, int exType) {
+		setChild(op);
 		this.expression = ex;
-		this.tableName = tableName;
-		this.tableAliase = tableAliase;
+		this.tableAliase = new LinkedList<OrderedTable>();
+		this.tableAliase.add(tAliase);
+		this.expressionType = exType;
 	}
 	
-	public SelectOperator(String tableAliase, Expression ex, Operator op) {
-		LinkedList<Operator> childList = new LinkedList<Operator>();
-		childList.add(op);
-		setChild(childList);
+	public SelectOperator(Expression ex, Operator op, int exType, LinkedList<OrderedTable> tAliase) {
+		setChild(op);
 		this.expression = ex;
-		this.tableName = tableAliase;
-		this.tableAliase = tableAliase;
+		this.expressionType = exType;
+		this.tableAliase = tAliase;
 	}
 	
-	public SelectOperator(Expression ex, Operator op) {
-		LinkedList<Operator> childList = new LinkedList<Operator>();
-		childList.add(op);
-		setChild(childList);
-		this.expression = ex;
+	public SelectOperator() {
+		
 	}
+	
 	
     //Getters and Setters
 
@@ -89,21 +91,25 @@ public class SelectOperator extends Operator{
 		this.expression = expression;
 	}
 
-	public String getTableName() {
-		return tableName;
-	}
-
-	public void setTable_name(String tableName) {
-		this.tableName = tableName;
-	}
-
-	public String getTable_aliase() {
+	public LinkedList<OrderedTable> getTableAliase() {
 		return tableAliase;
 	}
 
-	public void setTableAliase(String tableAliase) {
-		this.tableAliase = tableAliase;
+	public void setTableAliase(OrderedTable tAliase) {
+		LinkedList<OrderedTable> aliase = new LinkedList<OrderedTable>();
+		aliase.add(tAliase);
+		this.tableAliase = aliase;
 	}
+
+	public int getExpressionType() {
+		return expressionType;
+	}
+
+	public void setExpressionType(int expressionType) {
+		this.expressionType = expressionType;
+	}
+	
+	
 	
 	
 
