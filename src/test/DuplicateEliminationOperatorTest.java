@@ -1,5 +1,6 @@
 package test;
 
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.StringReader;
 
@@ -9,24 +10,20 @@ import net.sf.jsqlparser.JSQLParserException;
 import net.sf.jsqlparser.parser.CCJSqlParserManager;
 import net.sf.jsqlparser.statement.select.PlainSelect;
 import net.sf.jsqlparser.statement.select.Select;
+import operators.DuplicateEliminationOperator;
 import operators.ProjectOperator;
 import operators.ScanOperator;
 import operators.SelectOperator;
 import operators.SortOperator;
 
-class SortOperatorTest {
+class DuplicateEliminationOperatorTest {
 
 	@Test
 	public void getNextTupleTest() throws JSQLParserException {
+		String[] statements = new String[1];
+		statements[0] = "SELECT * FROM Reserves R WHERE R.H = 101 ORDER BY R.H;";
 
-		String[] statements = new String[4];
-		
-		statements[0] = "SELECT * FROM Sailors;";
-		statements[1] = "SELECT * FROM Sailors S ORDER BY S.B;";
-		statements[2] = "SELECT S.B, S.C FROM Sailors S Order By S.B;";
-		statements[3] = "SELECT * FROM Sailors WHERE Sailors.B = 100 ORDER BY Sailors.C;";
-		
-		
+
 		for (int i=0; i< statements.length; i++) {
 			System.out.println("*******when statement is : " + statements[i]);
 			String statement = statements[i];
@@ -39,12 +36,12 @@ class SortOperatorTest {
 			SortOperator sortOp = new SortOperator(ps, selectOp);
 			ProjectOperator projectOp = new ProjectOperator(ps, sortOp);
 			projectOp.dump();
+			System.out.println();
+			DuplicateEliminationOperator dupOp = new DuplicateEliminationOperator(projectOp);
+			dupOp.dump();
 			System.out.println("*******end*********");
 			System.out.println();
 		}
-
 	}
-
-
 
 }
