@@ -41,19 +41,15 @@ public class SelectOperator extends Operator{
 	}
 	
 	//Constructors
-//	public SelectOperator(PlainSelect ps, Operator op) {
-//		String tableInfo = ps.getFromItem().toString();
-//		String[] aimTable = tableInfo.split("\\s+");
-//		if (aimTable.length<1) {
-//			return;
-//		}
-//		setChild(op);
-//		this.expression = ps.getWhere();
-//		tableName = new LinkedList<String>();
-//		tableName.add(aimTable[0]);
-//		tableAliase = new LinkedList<String>();
-//		tableAliase.add(aimTable[aimTable.length-1]);
-//	}
+	public SelectOperator(PlainSelect ps, Operator op) {
+		String tableInfo = ps.getFromItem().toString();
+		String[] aimTable = tableInfo.split("\\s+");
+		if (aimTable.length<1) {
+			return;
+		}
+		setChild(op);
+		this.expression = ps.getWhere();
+	}
 	
 //	public SelectOperator(String tName, String tAliase, Expression ex, Operator op, int exType) {
 //		setChild(op);
@@ -79,6 +75,8 @@ public class SelectOperator extends Operator{
 		this.expressionType = exType;
 		this.tableAliase = tAliase;
 	}
+	
+	public SelectOperator()
 	
 	
     //Getters and Setters
