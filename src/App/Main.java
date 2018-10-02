@@ -18,6 +18,11 @@ import operators.SortOperator;
 public class Main {
 
 	public static void main(String[] args) {
+		
+		SQLInterpreter.init(args);
+		
+		
+		
 		String queriesFile = Dynamic_properties.TEST_QUERY_PATH;
 		try {
 			CCJSqlParser parser = new CCJSqlParser(new FileReader(queriesFile));
