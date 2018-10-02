@@ -161,37 +161,111 @@ public class BasicVisitor implements SelectVisitor, FromItemVisitor, ItemsListVi
 			currentTable.removeLast();
 			addJoinOperator(table1, table2, equals);
 		}
-		
-		
+				
 	}
 
 	@Override
 	public void visit(GreaterThan greater) {
-		// TODO Auto-generated method stub
+		Expression left = greater.getLeftExpression();
+		Expression right = greater.getRightExpression();
+		int expressionType = getExpressionType(left, right);
+		left.accept(this);
+		right.accept(this);
+		if (expressionType == 1) {
+			String tableAliase = currentTable.getLast();
+			currentTable.removeLast();
+			addSelectOprator(tableAliase, greater);
+		}else {
+			String table1 = currentTable.getLast();
+			currentTable.removeLast();
+			String table2 = currentTable.getLast();
+			currentTable.removeLast();
+			addJoinOperator(table1, table2, greater);
+		}
 		
 	}
 
 	@Override
 	public void visit(GreaterThanEquals greaterEquals) {
-		// TODO Auto-generated method stub
+		Expression left = greaterEquals.getLeftExpression();
+		Expression right = greaterEquals.getRightExpression();
+		int expressionType = getExpressionType(left, right);
+		left.accept(this);
+		right.accept(this);
+		if (expressionType == 1) {
+			String tableAliase = currentTable.getLast();
+			currentTable.removeLast();
+			addSelectOprator(tableAliase, greaterEquals);
+		}else {
+			String table1 = currentTable.getLast();
+			currentTable.removeLast();
+			String table2 = currentTable.getLast();
+			currentTable.removeLast();
+			addJoinOperator(table1, table2, greaterEquals);
+		}
 		
 	}
 	
 	@Override
 	public void visit(MinorThan minor) {
-		// TODO Auto-generated method stub
+		Expression left = minor.getLeftExpression();
+		Expression right = minor.getRightExpression();
+		int expressionType = getExpressionType(left, right);
+		left.accept(this);
+		right.accept(this);
+		if (expressionType == 1) {
+			String tableAliase = currentTable.getLast();
+			currentTable.removeLast();
+			addSelectOprator(tableAliase, minor);
+		}else {
+			String table1 = currentTable.getLast();
+			currentTable.removeLast();
+			String table2 = currentTable.getLast();
+			currentTable.removeLast();
+			addJoinOperator(table1, table2, minor);
+		}
 		
 	}
 
 	@Override
 	public void visit(MinorThanEquals minorEquals) {
-		// TODO Auto-generated method stub
+		Expression left = minorEquals.getLeftExpression();
+		Expression right = minorEquals.getRightExpression();
+		int expressionType = getExpressionType(left, right);
+		left.accept(this);
+		right.accept(this);
+		if (expressionType == 1) {
+			String tableAliase = currentTable.getLast();
+			currentTable.removeLast();
+			addSelectOprator(tableAliase, minorEquals);
+		}else {
+			String table1 = currentTable.getLast();
+			currentTable.removeLast();
+			String table2 = currentTable.getLast();
+			currentTable.removeLast();
+			addJoinOperator(table1, table2, minorEquals);
+		}
 		
 	}
 
 	@Override
 	public void visit(NotEqualsTo notEquals) {
-		// TODO Auto-generated method stub
+		Expression left = notEquals.getLeftExpression();
+		Expression right = notEquals.getRightExpression();
+		int expressionType = getExpressionType(left, right);
+		left.accept(this);
+		right.accept(this);
+		if (expressionType == 1) {
+			String tableAliase = currentTable.getLast();
+			currentTable.removeLast();
+			addSelectOprator(tableAliase, notEquals);
+		}else {
+			String table1 = currentTable.getLast();
+			currentTable.removeLast();
+			String table2 = currentTable.getLast();
+			currentTable.removeLast();
+			addJoinOperator(table1, table2, notEquals);
+		}
 		
 	}
 	
