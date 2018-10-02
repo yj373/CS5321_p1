@@ -51,6 +51,7 @@ public abstract class Operator {
 	 * 
 	 * @param index index of .txt file
 	 */
+
 	public void dump(int index) {
 		reset();
 		String output_path = Dynamic_properties.outputPath;
@@ -60,7 +61,6 @@ public abstract class Operator {
 			BufferedWriter bw = new BufferedWriter(new FileWriter(file));
 			Tuple tuple = getNextTuple();
 			while (tuple != null) {
-				tuple.printData();
 				bw.write(tuple.getTupleData().toString() + '\n');
 				tuple = getNextTuple();
 			}
