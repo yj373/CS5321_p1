@@ -81,7 +81,8 @@ public class ScanOperator extends Operator{
 			e.printStackTrace();
 			e.getMessage();
 		}
-		this.tableAliase = tableAliase;
+		if (tableAliase == null) this.tableAliase = tableName;
+		else this.tableAliase = tableAliase;
 		this.attributes = DataBase.getInstance().getSchema(tableName);
 	}
 	
@@ -96,7 +97,8 @@ public class ScanOperator extends Operator{
 			e.printStackTrace();
 			e.getMessage();
 		}
-		this.tableAliase = tableAliase;
+		if (tableAliase == null) this.tableAliase = tableName;
+		else this.tableAliase = tableAliase;
 		this.attributes = DataBase.getInstance().getSchema(tableName);
 	}
 	
