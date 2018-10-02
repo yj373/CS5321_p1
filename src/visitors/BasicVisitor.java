@@ -313,6 +313,7 @@ public class BasicVisitor implements SelectVisitor, FromItemVisitor, ItemsListVi
 		}
 		
 		root.getParent().setChild(newChild);
+		newOp.setParent(root.getParent());
 		root.setParent(newOp);
 		LinkedList<Operator> newValue = tableDirectory.get(tableAliase);
 		newValue.removeFirst();
@@ -323,14 +324,23 @@ public class BasicVisitor implements SelectVisitor, FromItemVisitor, ItemsListVi
 	
 	private void addJoinOperator(String table1, String table2, Expression ex) {
 		Operator end1 = tableDirectory.get(table1).get(1);
+		Operator root1 = tableDirectory.get(table1).get(0);		
 		Operator end2 = tableDirectory.get(table2).get(1);
+		Operator root2 = tableDirectory.get(table2).get(0);
+		
 		JoinOperator joinOp = new JoinOperator(end1, end2);
 		SelectOperator selectOp = new SelectOperator(ex, joinOp);
+		if (root1.getParent() == null) root1.setParent(joinOp);
+		if (root2.getParent() == null) root2.setParent(joinOp);
 		
 		LinkedList<Operator> newValue = tableDirectory.get(table1);
 		newValue.removeLast();
 		newValue.addLast(selectOp);
+		newValue.removeFirst();
+		newValue.addFirst(root1);
 		tableDirectory.put(table1, newValue);
+		newValue.removeFirst();
+		newValue.addFirst(root2);
 		tableDirectory.put(table2, newValue);
 		
 	}
