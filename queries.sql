@@ -1,3 +1,4 @@
+SELECT S.* FROM Sailors;
 SELECT * FROM Sailors WHERE Sailors.A = Reserves.G AND  S1.A < S2.A  AND S.A < 3 ORDER BY Sailors.B, S.A;
 SELECT Sailors.A , S.B FROM Sailors;
 SELECT * FROM Sailors;
