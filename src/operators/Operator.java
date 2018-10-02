@@ -60,6 +60,7 @@ public abstract class Operator {
 			BufferedWriter bw = new BufferedWriter(new FileWriter(file));
 			Tuple tuple = getNextTuple();
 			while (tuple != null) {
+				tuple.printData();
 				bw.write(tuple.getTupleData().toString() + '\n');
 				tuple = getNextTuple();
 			}
