@@ -28,7 +28,7 @@ class SelectOperatorTest {
 		selectOp.dump();
 	}
 
-	//@Test
+	@Test
 	public void getNextTupleTest() throws JSQLParserException {
 
 		String[] statements = new String[1];
