@@ -38,6 +38,7 @@ public class SortOperator extends Operator{
 		Map<Integer, String> pairs = new HashMap<Integer, String>();
 		for (String key : schema.keySet()) {
 			pairs.put(schema.get(key), key);
+			
 		}
 		sortSequence = new String[pairs.size()];
 		for (int i=0; i<pairs.size(); i++) {

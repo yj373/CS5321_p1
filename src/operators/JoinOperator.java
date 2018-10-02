@@ -3,6 +3,7 @@ package operators;
 import java.util.*;
 
 import data.Tuple;
+import operators.SortOperator.TupleComparator;
 
 public class JoinOperator extends Operator{
 
