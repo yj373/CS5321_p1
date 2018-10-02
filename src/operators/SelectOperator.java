@@ -51,15 +51,6 @@ public class SelectOperator extends Operator{
 		this.expression = ps.getWhere();
 	}
 	
-//	public SelectOperator(String tName, String tAliase, Expression ex, Operator op, int exType) {
-//		setChild(op);
-//		this.expression = ex;
-//		tableName = new LinkedList<String>();
-//		tableName.add(tName);
-//		tableAliase = new LinkedList<String>();
-//		tableAliase.add(tAliase);
-//		this.expressionType = exType;
-//	}
 	
 	public SelectOperator(OrderedTable tAliase, Expression ex, Operator op, int exType) {
 		setChild(op);
