@@ -55,7 +55,7 @@ public abstract class Operator {
 		reset();
 		String output_path = Dynamic_properties.outputPath;
 		new File (output_path).mkdirs();
-		File file = new File(output_path + "/query" + "i" + ".txt");
+		File file = new File(output_path + "/query" + index + ".txt");
 		try {
 			BufferedWriter bw = new BufferedWriter(new FileWriter(file));
 			Tuple tuple = getNextTuple();

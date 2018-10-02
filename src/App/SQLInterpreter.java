@@ -16,9 +16,6 @@ public class SQLInterpreter {
 	public static void init (String[] args) {
 		Dynamic_properties.setPath(args[0], args[1]);
 	}
-	public static void init () {
-	}
-	
 
 	public static void BuildQueryPlan () {
 		
@@ -39,12 +36,14 @@ public class SQLInterpreter {
 			}
 
 		} catch (Exception e){
-			
+			 System.err.println("Exception occurred during parsing");
+	          e.printStackTrace();
 		}
 
 	}
 	
 	public static void writeToFile (int index, Operator root) {
 		root.dump(index);
+		System.out.println("end");
 	}
 }
