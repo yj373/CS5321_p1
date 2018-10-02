@@ -330,10 +330,11 @@ public class BasicVisitor implements SelectVisitor, FromItemVisitor, ItemsListVi
 		}
 		
 		root.getParent().setChild(newChild);
+		newOp.setParent(root.getParent());
 		root.setParent(newOp);
 		
 	}
-	
+
 	private void addJoinOperator(OrderedTable table1, OrderedTable table2, Expression ex) {
 		if (table1.index > table2.index) {
 			OrderedTable temp = table1;
@@ -358,20 +359,7 @@ public class BasicVisitor implements SelectVisitor, FromItemVisitor, ItemsListVi
 		
 		tableDirectory.put(table1, newValue1);
 		tableDirectory.put(table2, newValue2);
-		
 	}
-
-
-		
-		
-	
-	
-	
-	
-	
-	
-	
-	
 	
 	@Override
 	public void visit(ExpressionList expressionList) {
