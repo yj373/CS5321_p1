@@ -36,6 +36,7 @@ class SortOperatorTest {
 			String table_info = ps.getFromItem().toString();
 			ScanOperator scanOp = new ScanOperator(table_info);
 			SelectOperator selectOp = new SelectOperator(ps,scanOp);
+			
 			SortOperator sortOp = new SortOperator(ps, selectOp);
 			ProjectOperator projectOp = new ProjectOperator(ps, sortOp);
 			projectOp.dump();

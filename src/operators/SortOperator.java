@@ -99,7 +99,8 @@ public class SortOperator extends Operator{
 					} 
 
 				}
-			}
+			
+			
 
 			/**
 			 * break ties in the rest of attributes
@@ -116,6 +117,10 @@ public class SortOperator extends Operator{
 				if (o1.getData()[col] > o2.getData()[col]){
 					return 1;
 				} 
+			}
+			
+			return 0;
+			
 			}
 			
 			return 0;

@@ -12,6 +12,7 @@ import operators.JoinOperator;
 import operators.ProjectOperator;
 import operators.ScanOperator;
 import operators.SelectOperator;
+import operators.SortOperator;
 
 
 class JoinOperatorTest {
@@ -26,6 +27,7 @@ class JoinOperatorTest {
 		statements[2] = "SELECT * FROM Sailors S, Reserves R WHERE S.A = R.G;";
 		statements[3] = "SELECT * FROM Sailors S, Reserves R WHERE S.B = 100 AND R.G < 2 ;";
 		statements[4] = "SELECT * FROM Sailors S, Boats B WHERE S.B = 100 AND B.E > 1;";
+
 		
 		for (int i=0; i< statements.length; i++) {
 			System.out.println("*******when statement is : " + statements[i]);
@@ -42,9 +44,10 @@ class JoinOperatorTest {
 			
 			JoinOperator joinOp = new JoinOperator(scanOp1, scanOp2);
 			SelectOperator selectOp = new SelectOperator(ps, joinOp);
-			
-			//ProjectOperator projectOp = new ProjectOperator(ps, selectOp);
-			selectOp.dump();
+
+			ProjectOperator projectOp = new ProjectOperator(ps, selectOp);
+			projectOp.dump();
+	
 			System.out.println("*******end*********");
 			System.out.println();
 		}
