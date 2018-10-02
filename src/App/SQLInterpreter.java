@@ -36,7 +36,7 @@ public class SQLInterpreter {
 					writeToFile (index, root);
 				} catch (Exception e) {
 					System.err.println("Exception occurred during paring query" + index);
-			        //e.printStackTrace();
+			        e.printStackTrace();
 				}
 				index++;	
 			}

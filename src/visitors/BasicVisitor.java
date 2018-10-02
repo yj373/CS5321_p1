@@ -7,6 +7,7 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Map;
 
+import data.OrderedTable;
 import net.sf.jsqlparser.expression.AllComparisonExpression;
 import net.sf.jsqlparser.expression.AnyComparisonExpression;
 import net.sf.jsqlparser.expression.CaseExpression;
@@ -115,8 +116,11 @@ public class BasicVisitor implements SelectVisitor, FromItemVisitor, ItemsListVi
 		}
 		Operator finalJoinOperator = joinStack.pop();
 		ProjectOperator proOp = new ProjectOperator(ps, finalJoinOperator);
+		finalJoinOperator.setParent(proOp);
 		SortOperator sortOp = new SortOperator(ps, proOp);
+		proOp.setParent(sortOp);
 		DuplicateEliminationOperator dOp= new DuplicateEliminationOperator(ps, sortOp);
+		sortOp.setParent(dOp);
 		rootOp = dOp;
 	}
 	
@@ -136,7 +140,7 @@ public class BasicVisitor implements SelectVisitor, FromItemVisitor, ItemsListVi
 		String tableAlias = tableNameIndices[0];
 		OrderedTable tableNameIndex = null;
 		for (OrderedTable s : tableDirectory.keySet()) {
-			if (s.tableAlias.equals(tableAlias)) {
+			if (s.getTableAliase().equals(tableAlias)) {
 				tableNameIndex = s;
 			}
 		}	
@@ -167,13 +171,13 @@ public class BasicVisitor implements SelectVisitor, FromItemVisitor, ItemsListVi
 		if (expressionType == 1) {
 			OrderedTable tableNameIndex = currentTable.getLast();
 			currentTable.removeLast();
-			addSelectOprator(tableNameIndex, equals);
+			addSelectOprator(tableNameIndex, equals, expressionType);
 		}else {
 			OrderedTable table2 = currentTable.getLast();
 			currentTable.removeLast();
 			OrderedTable table1 = currentTable.getLast();
 			currentTable.removeLast();
-			addJoinOperator(table1, table2, equals);
+			addJoinOperator(table1, table2, equals, expressionType);
 		}
 				
 	}
@@ -188,13 +192,13 @@ public class BasicVisitor implements SelectVisitor, FromItemVisitor, ItemsListVi
 		if (expressionType == 1) {
 			OrderedTable tableNameIndex = currentTable.getLast();
 			currentTable.removeLast();
-			addSelectOprator(tableNameIndex, greater);
+			addSelectOprator(tableNameIndex, greater, expressionType);
 		}else {
 			OrderedTable table2 = currentTable.getLast();
 			currentTable.removeLast();
 			OrderedTable table1 = currentTable.getLast();
 			currentTable.removeLast();
-			addJoinOperator(table1, table2, greater);
+			addJoinOperator(table1, table2, greater, expressionType);
 		}
 		
 	}
@@ -209,13 +213,13 @@ public class BasicVisitor implements SelectVisitor, FromItemVisitor, ItemsListVi
 		if (expressionType == 1) {
 			OrderedTable tableNameIndex = currentTable.getLast();
 			currentTable.removeLast();
-			addSelectOprator(tableNameIndex, greaterEquals);
+			addSelectOprator(tableNameIndex, greaterEquals, expressionType);
 		}else {
 			OrderedTable table2 = currentTable.getLast();
 			currentTable.removeLast();
 			OrderedTable table1 = currentTable.getLast();
 			currentTable.removeLast();
-			addJoinOperator(table1, table2, greaterEquals);
+			addJoinOperator(table1, table2, greaterEquals, expressionType);
 		}
 		
 	}
@@ -230,13 +234,13 @@ public class BasicVisitor implements SelectVisitor, FromItemVisitor, ItemsListVi
 		if (expressionType == 1) {
 			OrderedTable tableNameIndex = currentTable.getLast();
 			currentTable.removeLast();
-			addSelectOprator(tableNameIndex, minor);
+			addSelectOprator(tableNameIndex, minor, expressionType);
 		}else {
 			OrderedTable table2 = currentTable.getLast();
 			currentTable.removeLast();
 			OrderedTable table1 = currentTable.getLast();
 			currentTable.removeLast();
-			addJoinOperator(table1, table2, minor);
+			addJoinOperator(table1, table2, minor, expressionType);
 	
 		}
 		
@@ -252,13 +256,13 @@ public class BasicVisitor implements SelectVisitor, FromItemVisitor, ItemsListVi
 		if (expressionType == 1) {
             OrderedTable tableNameIndex = currentTable.getLast();
 			currentTable.removeLast();
-			addSelectOprator(tableNameIndex, minorEquals);
+			addSelectOprator(tableNameIndex, minorEquals, expressionType);
 		}else {
 			OrderedTable table2 = currentTable.getLast();
 			currentTable.removeLast();
 			OrderedTable table1 = currentTable.getLast();
 			currentTable.removeLast();
-			addJoinOperator(table1, table2, minorEquals);
+			addJoinOperator(table1, table2, minorEquals, expressionType);
 
 		}
 		
@@ -274,14 +278,14 @@ public class BasicVisitor implements SelectVisitor, FromItemVisitor, ItemsListVi
 		if (expressionType == 1) {
 			OrderedTable tableNameIndex = currentTable.getLast();
 			currentTable.removeLast();
-			addSelectOprator(tableNameIndex, notEquals);
+			addSelectOprator(tableNameIndex, notEquals, expressionType);
 		}else {
 
 			OrderedTable rightTable = currentTable.getLast();
 			currentTable.removeLast();
 			OrderedTable leftTable = currentTable.getLast();
 			currentTable.removeLast();
-			addJoinOperator(leftTable, rightTable, notEquals);
+			addJoinOperator(leftTable, rightTable, notEquals, expressionType);
 		}
 		
 	}
@@ -293,11 +297,10 @@ public class BasicVisitor implements SelectVisitor, FromItemVisitor, ItemsListVi
 		return 1;
 	}
 	
-	private void addSelectOprator(OrderedTable tableNameIndex, Expression ex) {
+	private void addSelectOprator(OrderedTable tableNameIndex, Expression ex, int exType) {
 		Operator root = tableDirectory.get(tableNameIndex)[0];
 		Operator end = tableDirectory.get(tableNameIndex)[1];
-		SelectOperator selectOp = new SelectOperator(tableNameIndex.tableAlias, ex, root);
-		
+		SelectOperator selectOp = new SelectOperator(tableNameIndex, ex, root, exType);
 		if (root.equals(end)) {
 
 			Operator[] newValue = tableDirectory.get(tableNameIndex);
@@ -335,30 +338,58 @@ public class BasicVisitor implements SelectVisitor, FromItemVisitor, ItemsListVi
 		
 	}
 
-	private void addJoinOperator(OrderedTable table1, OrderedTable table2, Expression ex) {
-		if (table1.index > table2.index) {
+	private void addJoinOperator(OrderedTable table1, OrderedTable table2, Expression ex, int exType) {
+		if (table1.getIndex() > table2.getIndex()) {
 			OrderedTable temp = table1;
 			table1 = table2;
 			table2 = temp;
 		}
-		Operator end1 = tableDirectory.get(table1)[1];
-		Operator end2 = tableDirectory.get(table2)[1];
-
-		JoinOperator joinOp = new JoinOperator(end1, end2);
-		SelectOperator selectOp = new SelectOperator(ex, joinOp);
+		
+		JoinOperator joinOp = new JoinOperator(tableDirectory.get(table1)[1], tableDirectory.get(table2)[1]);
+		LinkedList<OrderedTable> tAliase = new LinkedList<OrderedTable>();
+		tAliase.add(table1);
+		tAliase.add(table2);
+		SelectOperator selectOp = new SelectOperator(ex, joinOp, exType, tAliase);
 		joinOp.setParent(selectOp);
 		
-		Operator[] newValue1 = tableDirectory.get(table1);
-		newValue1[1].setParent(joinOp);
-		newValue1[1] = selectOp;
+		if (tableDirectory.get(table1)[1] instanceof SelectOperator) {
+			SelectOperator temp = (SelectOperator) tableDirectory.get(table1)[1];
+			if(temp.getExpressionType()!=1) {
+				LinkedList<OrderedTable> tables = temp.getTableAliase();
+				for (OrderedTable ot: tables) {
+					if (!(ot.equals(table1)||ot.equals(table2))) {
+						updateChildParentState2(ot, joinOp, selectOp);
+					}
+				}
+				
+			}
+		}
 		
-		Operator[] newValue2 = tableDirectory.get(table2);
-		newValue2[1].setParent(joinOp);
-		newValue2[1] = selectOp;
+		if (tableDirectory.get(table2)[1] instanceof SelectOperator) {
+			SelectOperator temp = (SelectOperator) tableDirectory.get(table2)[1];
+			if(temp.getExpressionType()!=1) {
+				LinkedList<OrderedTable> tables = temp.getTableAliase();
+				for (OrderedTable ot: tables) {
+					if (!(ot.equals(table1)||ot.equals(table2))) {
+						updateChildParentState2(ot, joinOp, selectOp);
+						
+					}
+				}
+				
+			}
+		}
+
 		
+		updateChildParentState2(table1, joinOp, selectOp);
 		
-		tableDirectory.put(table1, newValue1);
-		tableDirectory.put(table2, newValue2);
+		updateChildParentState2(table2, joinOp, selectOp);
+	}
+	private void updateChildParentState2(OrderedTable table, Operator joinOp, Operator selectOp) {
+		Operator[] newValue = tableDirectory.get(table);
+		newValue[1].setParent(joinOp);
+		newValue[1] = selectOp;
+		tableDirectory.put(table, newValue);
+		
 	}
 	
 	@Override
@@ -562,22 +593,3 @@ public class BasicVisitor implements SelectVisitor, FromItemVisitor, ItemsListVi
 
 }
 
-class OrderedTable {
-	String tableAlias;
-    int index;
-    
-    OrderedTable(String str, int ind) {
-    	tableAlias = str;
-    	index = ind;
-    }
-    
-    @Override
-	public int hashCode(){
-    	return tableAlias.hashCode();
-    }
-    
-    @Override
-    public boolean equals(Object o) {
-    	return this.tableAlias.equals(o);
-    }
-}

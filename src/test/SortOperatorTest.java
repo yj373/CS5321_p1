@@ -35,12 +35,12 @@ class SortOperatorTest {
 					parse(new StringReader(statement))).getSelectBody();
 			String table_info = ps.getFromItem().toString();
 			ScanOperator scanOp = new ScanOperator(table_info);
-			SelectOperator selectOp = new SelectOperator(ps,scanOp);
-			SortOperator sortOp = new SortOperator(ps, selectOp);
-			ProjectOperator projectOp = new ProjectOperator(ps, sortOp);
-			projectOp.dump();
-			System.out.println("*******end*********");
-			System.out.println();
+//			SelectOperator selectOp = new SelectOperator(ps,scanOp);
+//			SortOperator sortOp = new SortOperator(ps, selectOp);
+//			ProjectOperator projectOp = new ProjectOperator(ps, sortOp);
+//			projectOp.dump();
+//			System.out.println("*******end*********");
+//			System.out.println();
 		}
 
 	}
