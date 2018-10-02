@@ -38,7 +38,7 @@ public class SQLInterpreter {
 
 		} catch (Exception e){
 			 System.err.println("Exception occurred during parsing");
-	          e.printStackTrace();
+	         e.printStackTrace();
 		}
 
 	}

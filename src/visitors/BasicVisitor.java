@@ -91,6 +91,7 @@ public class BasicVisitor implements SelectVisitor, FromItemVisitor, ItemsListVi
  
 			}
 		}
+
 		if (ps.getWhere() != null) {
 			ps.getWhere().accept(this);
 		}
