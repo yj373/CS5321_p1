@@ -21,10 +21,9 @@ public class DuplicateEliminationOperator extends Operator{
 				while (t!= null && isEqual(t, prevTuple)) {
 					t = child.getNextTuple();
 				}
-			} else {
-				prevTuple = t;
 			}
 		}
+		prevTuple = t;
 
 		return t;
 	}

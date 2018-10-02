@@ -76,7 +76,9 @@ public class SelectOperator extends Operator{
 		this.tableAliase = tAliase;
 	}
 	
-	public SelectOperator()
+	public SelectOperator() {
+		
+	}
 	
 	
     //Getters and Setters
