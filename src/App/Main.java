@@ -6,7 +6,7 @@ package App;
  * Read queries from input files and generate corresponding query plan
  * write outputs to output files
  * 
- * @author yanxiaoxing
+ * @author Xiaoxing Yan
  *
  */
 public class Main {

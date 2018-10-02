@@ -16,7 +16,7 @@ import visitors.BasicVisitor;
  * Interpret query to query plan
  * evaluate query plan and generate output files
  * 
- * @author yanxiaoxing
+ * @author Xiaoxing Yan
  *
  */
 
