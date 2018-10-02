@@ -16,9 +16,9 @@ import java.io.IOException;
 
 public class DataBase {
 	//Get the needed paths
-	private String query_path = Dynamic_properties.QUERY_PATH;
-	private String data_path = Dynamic_properties.DATA_PATH;
-	private String schema_path = Dynamic_properties.SCHEMA_PATH;
+	private String query_path = Dynamic_properties.queryPath;
+	private String data_path = Dynamic_properties.dataPath;
+	private String schema_path = Dynamic_properties.schemaPath;
 	
 	//Track the address of each table
 	//key:the name of the table, value: the address of the table

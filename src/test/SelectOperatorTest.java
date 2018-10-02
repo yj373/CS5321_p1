@@ -14,20 +14,6 @@ import operators.SelectOperator;
 
 
 class SelectOperatorTest {
-	
-	@Test
-	// Test fot getNextTuple()
-	public void unitTest() throws JSQLParserException {
-		String statement = "SELECT * FROM Sailors S WHERE S.B = 200;";
-		CCJSqlParserManager parserManager = new CCJSqlParserManager();
-		PlainSelect ps = (PlainSelect) ((Select) parserManager.
-				parse(new StringReader(statement))).getSelectBody();
-		String table_info = ps.getFromItem().toString();
-		ScanOperator scanOp = new ScanOperator(table_info);
-		SelectOperator selectOp = new SelectOperator(ps,scanOp);
-		selectOp.dump();
-	}
-
 	@Test
 	public void getNextTupleTest() throws JSQLParserException {
 

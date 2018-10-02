@@ -36,14 +36,23 @@ public abstract class Operator {
 	 * */
 	public void dump() {
 		reset();
+		Tuple tuple = getNextTuple();
+		while (tuple != null) {
+			tuple.printData();
+			tuple = getNextTuple();
+		}
+		reset();
+	}
+	
+	public void dump(int index) {
+		reset();
 		String output_path = Dynamic_properties.outputPath;
 		new File (output_path).mkdirs();
-		File file = new File(output_path + "/dump.txt");
+		File file = new File(output_path + "/query" + "i" + ".txt");
 		try {
 			BufferedWriter bw = new BufferedWriter(new FileWriter(file));
 			Tuple tuple = getNextTuple();
 			while (tuple != null) {
-				tuple.printData();
 				bw.write(tuple.getTupleData().toString() + '\n');
 				tuple = getNextTuple();
 			}

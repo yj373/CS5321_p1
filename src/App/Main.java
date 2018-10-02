@@ -1,10 +1,12 @@
 package App;
 
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.List;
 
 import data.Dynamic_properties;
 import net.sf.jsqlparser.parser.CCJSqlParser;
+import net.sf.jsqlparser.parser.ParseException;
 import net.sf.jsqlparser.statement.Statement;
 import net.sf.jsqlparser.statement.select.PlainSelect;
 import net.sf.jsqlparser.statement.select.Select;
@@ -22,7 +24,7 @@ public class Main {
 		
 		
 		
-		String queriesFile = Dynamic_properties.TEST_QUERY_PATH;
+		String queriesFile = Dynamic_properties.testQueryPath;
 		try {
 			CCJSqlParser parser = new CCJSqlParser(new FileReader(queriesFile));
 			Statement statement = parser.Statement();
@@ -53,5 +55,22 @@ public class Main {
 		}
 
 	}
+}
 
+class ProcessCommand {
+	public void init(String inputPath, String outputPath) {
+		Dynamic_properties.setPath(inputPath, outputPath);
+	}
+	
+	public void process() throws FileNotFoundException, ParseException {
+		CCJSqlParser parser = new CCJSqlParser(new FileReader(Dynamic_properties.queryPath));
+		Statement statement = parser.Statement();
+		int i = 0;
+		while (statement != null) {
+			Select select = (Select)statement;
+			//// process the ///////
+			
+		}
+	}
+	
 }
