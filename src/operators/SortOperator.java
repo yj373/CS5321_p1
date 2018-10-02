@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -13,7 +14,6 @@ import net.sf.jsqlparser.statement.select.PlainSelect;
 
 public class SortOperator extends Operator{
 	
-	private Operator child;
 	private Map<String, Integer> schema;
 	private PlainSelect plainSelect;
 	private String[] sortSequence;
@@ -24,10 +24,12 @@ public class SortOperator extends Operator{
 	public SortOperator(PlainSelect plainSelect, Operator op) {
 		
 		this.plainSelect = plainSelect;
-		this.child = op;
+		LinkedList<Operator> newChild = new LinkedList<Operator>();
+		newChild.add(op);
+		setChild(newChild);
 
 		dataCollection = new ArrayList<Tuple>();
-		Tuple current = child.getNextTuple();
+		Tuple current = getChild().get(0).getNextTuple();
 		
 		/**get sorting sequence*/
 		if (current != null) {
@@ -45,11 +47,11 @@ public class SortOperator extends Operator{
 		/**read all tuples*/
 		while (current!=null) {
 			dataCollection.add(current);
-			current = child.getNextTuple();
+			current = getChild().get(0).getNextTuple();
 		}
 		
 		Collections.sort(dataCollection, new TupleComparator());
-		child.reset();
+		getChild().get(0).reset();
 
 	}
 
@@ -75,7 +77,9 @@ public class SortOperator extends Operator{
 	 * setter method to set child
 	 */
 	public void setChild(Operator op) {
-		child = op;
+		LinkedList<Operator> newChild = new LinkedList<Operator>();
+		newChild.add(op);
+		setChild(newChild);
 	}
 	
 	class TupleComparator implements Comparator<Tuple> {

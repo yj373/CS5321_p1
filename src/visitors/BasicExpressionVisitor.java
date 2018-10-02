@@ -118,7 +118,7 @@ public class BasicExpressionVisitor implements ExpressionVisitor{
 		equals.getRightExpression().accept(this);
 		Long right_v = this.data.getLast();
 		Long left_v = this.data.get(data.size()-2);
-		this.result.add(left_v == right_v);
+		this.result.add(left_v.equals(right_v));
 			
 	}
 	
