@@ -23,9 +23,9 @@ public abstract class Operator {
 	 * */
 	public void dump() {
 		reset();
-		String output_path = Dynamic_properties.OUTPUT_PATH;
+		String output_path = Dynamic_properties.outputPath;
 		new File (output_path).mkdirs();
-		File file = new File(output_path+"dump.txt");
+		File file = new File(output_path + "/dump.txt");
 		try {
 			BufferedWriter bw = new BufferedWriter(new FileWriter(file));
 			Tuple tuple = getNextTuple();

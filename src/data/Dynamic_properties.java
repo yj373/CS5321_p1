@@ -1,13 +1,23 @@
 package data;
 
 public class Dynamic_properties {
-	
-	public static String INPUT_PATH = "src/samples/input";
-	public static String DATA_PATH = INPUT_PATH + "/db/data/";
-	public static String QUERY_PATH = INPUT_PATH + "/queries.sql";
-	public static String SCHEMA_PATH = INPUT_PATH +"/db/schema.txt";
-	public static String OUTPUT_PATH = "src/samples/output/";
-	
-	public static String TEST_QUERY_PATH = "src/samples/input/test_query.sql";
 
+	public static String inputPath = "src/samples/input";
+	public static String dataPath = inputPath + "/db/data/";
+	public static String queryPath = inputPath + "/queries.sql";
+	public static String schemaPath = inputPath + "/db/schema.txt";
+	public static String outputPath = "src/samples/output";
+	
+	public static String testQueryPath = inputPath + "/test_query.sql";
+	
+	public static void setPath(String p0, String p1) {
+		
+		inputPath = p0;
+		outputPath = p1;
+		dataPath = inputPath + "/db/data/";
+		queryPath = inputPath + "/queries.sql";
+		schemaPath = inputPath + "/db/schema.txt";
+		
+	}
+	
 }
