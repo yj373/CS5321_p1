@@ -44,7 +44,7 @@ public class SelectOperator extends Operator{
 	public SelectOperator(PlainSelect ps, Operator op) {
 		String tableInfo = ps.getFromItem().toString();
 		String[] aimTable = tableInfo.split("\\s+");
-		if (aimTable.length<1) {
+		if (aimTable.length < 1) {
 			return;
 		}
 		setChild(op);
