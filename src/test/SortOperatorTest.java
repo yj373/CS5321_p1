@@ -2,9 +2,7 @@ package test;
 
 
 import java.io.StringReader;
-
 import org.junit.jupiter.api.Test;
-
 import net.sf.jsqlparser.JSQLParserException;
 import net.sf.jsqlparser.parser.CCJSqlParserManager;
 import net.sf.jsqlparser.statement.select.PlainSelect;
@@ -14,8 +12,22 @@ import operators.ScanOperator;
 import operators.SelectOperator;
 import operators.SortOperator;
 
+
+/**
+ * This class provides function:
+ * Testing for methods in SortOperator
+ * 
+ * @author Xiaoxing Yan
+ *
+ */
 class SortOperatorTest {
 
+	/**
+	 * test method getNextTuple()
+	 * 
+	 * @throws JSQLParserException
+	 */
+	
 	@Test
 	public void getNextTupleTest() throws JSQLParserException {
 

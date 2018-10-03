@@ -10,16 +10,26 @@ import data.Tuple;
 import net.sf.jsqlparser.statement.select.PlainSelect;
 import net.sf.jsqlparser.statement.select.SelectItem;
 
+/**
+ * This class provides function:
+ * Choose required attributes according 
+ * to the SELECT requirement
+ * 
+ * @author Xiaoxing Yan
+ */
 public class ProjectOperator extends Operator{
 	
-	/**store information of needed attributes*/
+	/*store information of needed attributes*/
 	private List<SelectItem> selectItems;
-	/**return all attributes or return specific attributes*/
+	/*check that whether return all attributes or return specific attributes*/
 	private boolean allColumns = false;
 	
 	/** 
-	 * Get corresponding columns information and
-	 * initialize childOp.
+	 * This method is a constructor which is to
+	 * get corresponding columns information and initialize childOp.
+	 * 
+	 * @param plainSelect  PlainSelect of query
+	 * @param op  pass in child operator
 	 * 
 	 */
 
@@ -36,17 +46,16 @@ public class ProjectOperator extends Operator{
 
 	
 	/**
-	 * Get the next tuple after projection
+	 * This method is to get the next tuple after projection
 	 * 
-	 * @return next tuple
+	 * @return next tuple after projection
 	 */
 	@Override
 	public Tuple getNextTuple() {
 		Operator child = getChild().get(0);
 		Tuple current = child.getNextTuple();
 		if (current != null && !allColumns) {
-			//Assume there must be corresponding columns
-			//in the given tuple
+			/*Assume there must be corresponding columns in the given tuple*/
 			long[] data = new long[selectItems.size()];
 			Map<String, Integer> schema = new HashMap<String, Integer>();
 			int index = 0;
@@ -67,7 +76,8 @@ public class ProjectOperator extends Operator{
 	}
 
 	/**
-	 * Reset project operator is to reset its child operator
+	 * This method is to reset project operator
+	 * by resetting its child operator
 	 */
 	@Override
 	public void reset() {
