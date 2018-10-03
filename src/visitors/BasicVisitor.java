@@ -66,6 +66,13 @@ import operators.ScanOperator;
 import operators.SelectOperator;
 import operators.SortOperator;
 
+/**
+ * this class provides function:
+ * build query plan
+ * 
+ * @author Yixuan Jiang
+ *
+ */
 public class BasicVisitor implements SelectVisitor, FromItemVisitor, ItemsListVisitor, ExpressionVisitor{
 	
 	
@@ -75,11 +82,21 @@ public class BasicVisitor implements SelectVisitor, FromItemVisitor, ItemsListVi
 	private LinkedList<OrderedTable> currentTable = new LinkedList<>();
 	private LinkedList<OrderedTable> joinedTables = new LinkedList<OrderedTable>();
 	
+	/**
+	 * Get the query plan which is a tree of operators
+	 * @param select: result of JsqlParser
+	 * @return the root operator
+	 */
 	public Operator getQueryPlan(Select select) {
 		select.getSelectBody().accept(this);
 		return rootOp;
 	}
 
+	/**
+	 * The visitor visits a PlainSelect
+	 * @param ps: result of JsqlParser
+	 *
+	 */
 	public void visit(PlainSelect ps) {
 		ps.getFromItem().accept(this);
 		if (ps.getJoins()!=null) {
@@ -125,6 +142,10 @@ public class BasicVisitor implements SelectVisitor, FromItemVisitor, ItemsListVi
 		rootOp = dOp;
 	}
 	
+	/**
+	 * The visitor visits a table
+	 * @param table: result of JsqlParser
+	 */
 	public void visit(Table table) {
 		ScanOperator scanOp = new ScanOperator(table.getWholeTableName(), table.getAlias());
 		Operator[] rootEnd = new Operator[2];
@@ -136,6 +157,10 @@ public class BasicVisitor implements SelectVisitor, FromItemVisitor, ItemsListVi
 	}
 	
 	@Override
+	/**
+	 * The visitor visits a column
+	 * @param column: result of JsqlParser
+	 */
 	public void visit(Column column) {
 		String[] tableNameIndices = column.getWholeColumnName().split("\\.");
 		String tableAlias = tableNameIndices[0];
@@ -150,12 +175,20 @@ public class BasicVisitor implements SelectVisitor, FromItemVisitor, ItemsListVi
 	}
 	
 	@Override
+	/**
+	 * The visitor visits a LongValue
+	 * @param lonV: result of JsqlParser
+	 */
 	public void visit(LongValue longV) {
 		// TODO Auto-generated method stub
 		
 	}
 	
 	@Override
+	/**
+	 * The visitor visits an AndExpression
+	 * @param and: result of JsqlParser
+	 */
 	public void visit(AndExpression and) {
 		and.getLeftExpression().accept(this);
 		and.getRightExpression().accept(this);
@@ -163,6 +196,10 @@ public class BasicVisitor implements SelectVisitor, FromItemVisitor, ItemsListVi
 	}
 	
 	@Override
+	/**
+	 * The visitor visits an EqualsTo
+	 * @param equals: result of JsqlParser
+	 */
 	public void visit(EqualsTo equals) {
 		Expression left = equals.getLeftExpression();
 		Expression right = equals.getRightExpression();
@@ -184,6 +221,10 @@ public class BasicVisitor implements SelectVisitor, FromItemVisitor, ItemsListVi
 	}
 
 	@Override
+	/**
+	 * The visitor visits a GreaterThan
+	 * @param greater: result of JsqlParser
+	 */
 	public void visit(GreaterThan greater) {
 		Expression left = greater.getLeftExpression();
 		Expression right = greater.getRightExpression();
@@ -205,6 +246,10 @@ public class BasicVisitor implements SelectVisitor, FromItemVisitor, ItemsListVi
 	}
 
 	@Override
+	/**
+	 * The visitor visits a column
+	 * @param column: result of JsqlParser
+	 */
 	public void visit(GreaterThanEquals greaterEquals) {
 		Expression left = greaterEquals.getLeftExpression();
 		Expression right = greaterEquals.getRightExpression();
@@ -226,6 +271,10 @@ public class BasicVisitor implements SelectVisitor, FromItemVisitor, ItemsListVi
 	}
 	
 	@Override
+	/**
+	 * The visitor visits a MinorThan
+	 * @param minor: result of JsqlParser
+	 */
 	public void visit(MinorThan minor) {
 		Expression left = minor.getLeftExpression();
 		Expression right = minor.getRightExpression();
@@ -248,6 +297,10 @@ public class BasicVisitor implements SelectVisitor, FromItemVisitor, ItemsListVi
 	}
 
 	@Override
+	/**
+	 * The visitor visits a MinorThanEquals
+	 * @param minorequals: result of JsqlParser
+	 */
 	public void visit(MinorThanEquals minorEquals) {
 		Expression left = minorEquals.getLeftExpression();
 		Expression right = minorEquals.getRightExpression();
@@ -270,6 +323,10 @@ public class BasicVisitor implements SelectVisitor, FromItemVisitor, ItemsListVi
 	}
 
 	@Override
+	/**
+	 * The visitor visits a NotEqualsTo
+	 * @param notEquals: result of JsqlParser
+	 */
 	public void visit(NotEqualsTo notEquals) {
 		Expression left = notEquals.getLeftExpression();
 		Expression right = notEquals.getRightExpression();
@@ -291,13 +348,25 @@ public class BasicVisitor implements SelectVisitor, FromItemVisitor, ItemsListVi
 		
 	}
 	
-	//Classify the expressions
-	//Type 1: don't need join, Type 2: need join
+	/**
+	 * Classify the expressions
+	 * Type 1: don't need join, Type 2: need join
+	 * @param e1: candidate expression 1
+	 * @param e2: candidate expression 2
+	 * @return the type of this expression
+	 */
 	private int getExpressionType(Expression e1, Expression e2) {
 		if (e1 instanceof Column && e2 instanceof Column) return 2;
 		return 1;
 	}
-	
+	/**
+	 * Once read in a type 1 expression, a select operator needs to be added to
+	 * the operator tree. The new SelectOperator needs to be added right above the 
+	 * ScamOperator of corresponding table
+	 * @param tableNameIndex: the table that needs a select operator
+	 * @param ex: the expression needs to be stored
+	 * @param exType: the type of the expression
+	 */
 	private void addSelectOprator(OrderedTable tableNameIndex, Expression ex, int exType) {
 		Operator root = tableDirectory.get(tableNameIndex)[0];
 		Operator end = tableDirectory.get(tableNameIndex)[1];
@@ -310,20 +379,28 @@ public class BasicVisitor implements SelectVisitor, FromItemVisitor, ItemsListVi
 			tableDirectory.put(tableNameIndex, newValue);
 			
 		} else {
-			
+			// If the parent operator of the root node is a JoinOperator
 			if (root.getParent() instanceof JoinOperator) {
 				if (root.equals(root.getParent().getChild().get(0))) {
+					// If the root node is the left child of the JoinOperator
 					updateChildParentState(root, selectOp, 0);
 				}else {
+					// If the root node is the right child of the JoinOperator
 					updateChildParentState(root, selectOp, 1);
 				}
 			}else {
+				// The parent operator will only has one child
 				updateChildParentState(root, selectOp, 0);				
 			}
 		}
 		
 	}
-	
+	/**
+	 * update the child parent state when a SelectOperator needs to be added
+	 * @param root: the ScanOperator of the corresponding table
+	 * @param newOp: the new SelectOperator that needs to be added to the tree
+	 * @param ind: determine how to update the childList of the parent operator of the root
+	 */
 	private void updateChildParentState(Operator root, Operator newOp, int ind) {
 		LinkedList<Operator> newChild = root.getParent().getChild();
 		newChild.remove(ind);
@@ -338,7 +415,18 @@ public class BasicVisitor implements SelectVisitor, FromItemVisitor, ItemsListVi
 		root.setParent(newOp);
 		
 	}
+	
+	
 
+	/**
+	 * Once read in a type 2 expression, a JoinOperator and a SelectOperator need to be added to
+	 * the operator tree. The new JoinOperator needs to add the top operators of its left child table and 
+	 * the right child table. The SelectOperator is the parent operator of the JoinOperator.
+	 * @param table1: the left child target table
+	 * @param table2: the right child target table
+	 * @param ex: the expression stored in the SelectOperator
+	 * @param exType: the type of the expression
+	 */
 	private void addJoinOperator(OrderedTable table1, OrderedTable table2, Expression ex, int exType) {
 		if (table1.getIndex() > table2.getIndex()) {
 			OrderedTable temp = table1;
@@ -355,13 +443,10 @@ public class BasicVisitor implements SelectVisitor, FromItemVisitor, ItemsListVi
 		SelectOperator selectOp = new SelectOperator(ex, joinOp, exType, tAliase);
 		joinOp.setParent(selectOp);
 		
-<<<<<<< HEAD
-=======
 		updateChildParentState2(table1, joinOp, selectOp);
 		updateChildParentState2(table2, joinOp, selectOp);
 		
 		//If any child operator of the 
->>>>>>> b2d2b71f73e26d2b77ce82c9778e81ba20380e1b
 		if (tableDirectory.get(table1)[1] instanceof SelectOperator) {
 			SelectOperator temp = (SelectOperator) tableDirectory.get(table1)[1];
 			if(temp.getExpressionType()!=1) {

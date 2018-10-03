@@ -5,6 +5,7 @@ import java.util.*;
 import data.Tuple;
 import operators.SortOperator.TupleComparator;
 
+
 /**
  * JoinOperator class, as a sub class of Operator, is to get next tuple from its children
  * and concatenate them as its own tuple. JoinOperator only joins tuples without considering
@@ -13,13 +14,11 @@ import operators.SortOperator.TupleComparator;
  * @author Ruoxuan Xu
  *
  */
-
 public class JoinOperator extends Operator{
-
     private Tuple currLeftTup;
     private Tuple currRightTup;
     
-    /**
+	/**
 	 * Constructor: create an JoinOperator instance with its two child operator.
 	 * @param op1 leftChild Operator
 	 * @param op2 rightChild Operator
@@ -33,14 +32,13 @@ public class JoinOperator extends Operator{
 	    currLeftTup = null;
 	    currRightTup = null;
 	}
-	
 
 	/**
 	 * @return the Tuple joined from the leftChild Operator and rightChild Operator.
 	 */
 	@Override
 	public Tuple getNextTuple() {		
-		// Corner Case: when there are less than two operators under join operator.
+		/* Corner Case: when there are less than two operators under join operator.*/
 		LinkedList<Operator> childList = super.getChild();
 		if (childList.get(0)== null && childList.get(1) == null) {
 			return null;
@@ -82,7 +80,7 @@ public class JoinOperator extends Operator{
 	 * @param t2 the following tuple
 	 */
     private Tuple concatenate(Tuple t1, Tuple t2) { 
-    	// deal with corner case
+    	/* deal with corner case */
     	if (t1 == null && t2 == null) {
     		return null;
     	}
@@ -92,11 +90,11 @@ public class JoinOperator extends Operator{
     				     : new Tuple(t1.getData(), t1.getSchema());
     	}
     	
-    	// compose the new data
+    	/* compose the new data */
     	long[] data = Arrays.copyOf(t1.getData(), t1.getSize() + t2.getSize());
     	System.arraycopy(t2.getData(), 0, data, t1.getSize(), t2.getSize());
     	
-    	// compose the new schema
+    	/* compose the new schema */
     	Map<String, Integer> schema = new HashMap<>();
     	for (Map.Entry<String, Integer> e : t1.getSchema().entrySet()) {
     		schema.put(e.getKey(), e.getValue());
@@ -105,11 +103,11 @@ public class JoinOperator extends Operator{
     		schema.put(e.getKey(), e.getValue() + t1.getSize());
     	}
     	
-    	// construct the result tuple
+    	/* construct the result tuple */
     	Tuple result = new Tuple(data, schema);
     	return result;
 	}
- 
+
     /**
      * Reset the JoinOperator so that when next time getNextTuple is called, it returns 
      * a tuple at first row.
@@ -146,6 +144,7 @@ public class JoinOperator extends Operator{
 	 * set the leftChild Operator
 	 * @param the leftChild Operator to set as
 	 */
+	
 	public void setLeftChild(Operator op) {
 		LinkedList<Operator> newChild = super.getChild();
 		newChild.remove(0);

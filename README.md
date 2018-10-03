@@ -1,8 +1,8 @@
 cs5321 project 1
 
 Team Member: Yixuan Jiang  (yj373) 
-                         Xiaoxing Yan  (xy363)
-                         Ruoxuan Xu   (rx65)
+             Xiaoxing Yan  (xy363)
+             Ruoxuan Xu   (rx65)
                         
 1. Top level class for main method: src/App/Main
 
