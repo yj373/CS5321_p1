@@ -16,7 +16,7 @@ public class Dynamic_properties {
 	public static String queryPath = inputPath + "/queries.sql";
 	public static String schemaPath = inputPath + "/db/schema.txt";
 	public static String outputPath = "src/samples/output";
-
+	
 	/**
 	 * set input and output path according to pass in parameters
 	 * @param p0 input absolute path

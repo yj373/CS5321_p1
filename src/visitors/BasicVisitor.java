@@ -73,6 +73,7 @@ public class BasicVisitor implements SelectVisitor, FromItemVisitor, ItemsListVi
 	private Deque<Operator> joinStack = new LinkedList<Operator>() ;
 	private Map<OrderedTable, Operator[]> tableDirectory = new HashMap<>();
 	private LinkedList<OrderedTable> currentTable = new LinkedList<>();
+	private LinkedList<OrderedTable> joinedTables = new LinkedList<OrderedTable>();
 	
 	public Operator getQueryPlan(Select select) {
 		select.getSelectBody().accept(this);
@@ -346,43 +347,38 @@ public class BasicVisitor implements SelectVisitor, FromItemVisitor, ItemsListVi
 		}
 		
 		JoinOperator joinOp = new JoinOperator(tableDirectory.get(table1)[1], tableDirectory.get(table2)[1]);
+		joinedTables.add(table1);
+		joinedTables.add(table2);
 		LinkedList<OrderedTable> tAliase = new LinkedList<OrderedTable>();
 		tAliase.add(table1);
 		tAliase.add(table2);
 		SelectOperator selectOp = new SelectOperator(ex, joinOp, exType, tAliase);
 		joinOp.setParent(selectOp);
 		
+<<<<<<< HEAD
+=======
+		updateChildParentState2(table1, joinOp, selectOp);
+		updateChildParentState2(table2, joinOp, selectOp);
+		
+		//If any child operator of the 
+>>>>>>> b2d2b71f73e26d2b77ce82c9778e81ba20380e1b
 		if (tableDirectory.get(table1)[1] instanceof SelectOperator) {
 			SelectOperator temp = (SelectOperator) tableDirectory.get(table1)[1];
 			if(temp.getExpressionType()!=1) {
-				LinkedList<OrderedTable> tables = temp.getTableAliase();
-				for (OrderedTable ot: tables) {
-					if (!(ot.equals(table1)||ot.equals(table2))) {
-						updateChildParentState2(ot, joinOp, selectOp);
-					}
+				for (OrderedTable ot: joinedTables) {
+					updateChildParentState2(ot, joinOp, selectOp);
 				}
 				
 			}
-		}
-		
-		if (tableDirectory.get(table2)[1] instanceof SelectOperator) {
+		}else if (tableDirectory.get(table2)[1] instanceof SelectOperator) {
 			SelectOperator temp = (SelectOperator) tableDirectory.get(table2)[1];
 			if(temp.getExpressionType()!=1) {
-				LinkedList<OrderedTable> tables = temp.getTableAliase();
-				for (OrderedTable ot: tables) {
-					if (!(ot.equals(table1)||ot.equals(table2))) {
-						updateChildParentState2(ot, joinOp, selectOp);
-						
-					}
+				for (OrderedTable ot: joinedTables) {
+					updateChildParentState2(ot, joinOp, selectOp);	
 				}
 				
 			}
 		}
-
-		
-		updateChildParentState2(table1, joinOp, selectOp);
-		
-		updateChildParentState2(table2, joinOp, selectOp);
 	}
 	private void updateChildParentState2(OrderedTable table, Operator joinOp, Operator selectOp) {
 		Operator[] newValue = tableDirectory.get(table);
