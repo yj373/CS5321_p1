@@ -30,21 +30,20 @@ public class DataBase {
 	 * value: the address of the table*/
 	private Map<String, String> addresses = new HashMap<String, String>();
 	
-	/*Store the schemas of all the tables
+	/* Store the schemas of all the tables
 	 * key: the name of each table
-	 * value: table column names*/
+	 * value: table column names
+	 */
 	private Map<String, LinkedList<String>> schemas = new HashMap<String, LinkedList<String>>();
 	
 	/*Singleton pattern*/
 	private static volatile DataBase Instance =null;
-	
 	
 	/** 
 	 * This method is a constructor which is to
 	 * initialize related fields
 	 * 
 	 */
-
 	private DataBase() {
 		try {
 			BufferedReader br = new BufferedReader(new FileReader(schema_path));
@@ -92,6 +91,7 @@ public class DataBase {
 	/**
 	 * getter method to get schema
 	 */
+
 	public LinkedList<String> getSchema(String str){
 		return schemas.get(str);
 	}

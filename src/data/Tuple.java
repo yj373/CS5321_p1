@@ -11,6 +11,7 @@ import java.util.Map;
  * @author Yixuan Jiang
  *
  */
+
 public class Tuple {
 	/*Store the data of each tuple*/
 	private long[] data;
@@ -22,7 +23,6 @@ public class Tuple {
 	public Tuple() {
 		
 	}
-	
 	
 	/** 
 	 * This method is a constructor which is to
@@ -74,6 +74,7 @@ public class Tuple {
 		}
 		return sb.toString();
 	}
+	
 	
 	/**
 	 * get data
