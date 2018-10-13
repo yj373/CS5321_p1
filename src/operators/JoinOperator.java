@@ -50,6 +50,7 @@ public class JoinOperator extends Operator{
 		/* If currLeftTup and currRightTup are both null, it is the start of join
 		 *  If currLeftTup is null but currRightTup is not null, it is the end of join 
 		 */
+
 		if (currLeftTup == null) {
 			if (currRightTup == null) {
 				currLeftTup = childList.get(0).getNextTuple();
@@ -70,6 +71,34 @@ public class JoinOperator extends Operator{
 		if ( currLeftTup != null && currRightTup != null) {
 			return concatenate(currLeftTup, currRightTup);
 		}
+
+	    if (currLeftTup == null) {
+	    	if (currRightTup == null) {
+		    	currLeftTup = childList.get(0).getNextTuple();
+		    	currRightTup = childList.get(1).getNextTuple();
+		    	if(currRightTup == null) {
+		    		return currLeftTup;
+		    	}
+		    	if(currLeftTup == null) {
+		    		return currRightTup;
+		    	}
+	    	} else {
+	    		return null;
+	    	}
+	    } else {
+	    	if (currRightTup == null) {
+		    	childList.get(1).reset();
+		    	currLeftTup = childList.get(0).getNextTuple();
+		    	currRightTup = childList.get(1).getNextTuple();
+		    } else {
+		    	currRightTup = childList.get(1).getNextTuple();	
+		    }	    	
+	    }
+   
+	    if ( currLeftTup != null && currRightTup != null) {
+	    	return concatenate(currLeftTup, currRightTup);
+	    }
+
 		return this.getNextTuple();
 	}
 
