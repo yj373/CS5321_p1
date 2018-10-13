@@ -54,6 +54,12 @@ public class JoinOperator extends Operator{
 	    	if (currRightTup == null) {
 		    	currLeftTup = childList.get(0).getNextTuple();
 		    	currRightTup = childList.get(1).getNextTuple();
+		    	if(currRightTup == null) {
+		    		return currLeftTup;
+		    	}
+		    	if(currLeftTup == null) {
+		    		return currRightTup;
+		    	}
 	    	} else {
 	    		return null;
 	    	}
