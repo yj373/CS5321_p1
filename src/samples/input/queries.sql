@@ -15,3 +15,5 @@ SELECT * FROM Sailors;
 SELECT Sailors.A FROM Sailors;
 SELECT S.A FROM Sailors S;
 SELECT * FROM Sailors S WHERE S.A < 3;
+SELECT * FROM Boats;
+SELECT DISTINCT * FROM Sailors AS S, Reserves AS R, Boats AS B WHERE S.A = R.G AND R.G = B.F;
