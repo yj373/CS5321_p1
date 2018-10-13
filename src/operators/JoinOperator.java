@@ -54,6 +54,8 @@ public class JoinOperator extends Operator{
 	    	if (currRightTup == null) {
 		    	currLeftTup = childList.get(0).getNextTuple();
 		    	currRightTup = childList.get(1).getNextTuple();
+		    	
+		    	// if leftTable is empty or right table is empty;
 		    	if(currRightTup == null) {
 		    		return currLeftTup;
 		    	}
