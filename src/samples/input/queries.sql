@@ -1,3 +1,4 @@
+SELECT * FROM Boats, Sailors;
 SELECT DISTINCT B.F FROM Reserves AS R, Boats AS B WHERE R.G = B.F;
 SELECT DISTINCT B.F FROM Sailors AS S, Reserves AS R, Boats AS B WHERE S.A = R.G AND R.G = B.F;
 SELECT DISTINCT * FROM Sailors AS S, Reserves AS R, Boats AS B WHERE S.A = R.G AND R.G = B.F ORDER BY S.B;

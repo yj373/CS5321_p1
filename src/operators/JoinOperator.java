@@ -60,7 +60,7 @@ public class JoinOperator extends Operator{
 		    		return currLeftTup;
 		    	}
 		    	if(currLeftTup == null) {
-		    		return currRightTup;
+		    		return null;
 		    	}
 	    	} else {
 	    		return null;
